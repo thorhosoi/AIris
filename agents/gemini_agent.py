@@ -17,7 +17,7 @@ class GeminiAgent(BaseAgent):
         # Configure Gemini
         genai.configure(api_key=self.api_key)
         # Use the latest stable model with correct API version
-        self.model = genai.GenerativeModel('gemini-1.5-flash', generation_config=genai.types.GenerationConfig(
+        self.model = genai.GenerativeModel('gemini-2.5-pro', generation_config=genai.types.GenerationConfig(
             max_output_tokens=4000,
             temperature=0.1,
         ))

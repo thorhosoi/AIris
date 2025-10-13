@@ -1,74 +1,33 @@
-# AI Engine Selection Configuration
-# =================================
-# This section allows you to configure which AI engines to use for different tasks.
-# You can set a default engine and override it for specific task types.
-
 ai_engines:
-  # Default engine for all tasks (when no specific task routing is defined)
-  # Options: claude, gemini, cursor, web_search, web_browser, local
-  default_engine: claude
-  
-  # Task-specific engine routing (overrides default_engine for specific tasks)
-  task_routing:
-    code_generation: cursor      # Use Cursor for code generation
-    document_generation: claude  # Use Claude for document creation
-    code_analysis: gemini        # Use Gemini for code analysis
-    web_search: web_search       # Use web search for information retrieval
-    web_browsing: web_browser    # Use web browser for URL content
-    git_operations: local        # Use local git commands
-    shell_operations: local      # Use local shell commands
-  
-  # Compliance mode: Restrict to only approved engines
-  compliance_mode: false
   allowed_engines:
-    - claude
-    - gemini
-    - cursor
-    - web_search
-    - web_browser
-    - local
-  
-  # Cost optimization: Automatically select cheaper engines for simple tasks
+  - claude
+  - gemini
+  - cursor
+  - web_search
+  - web_browser
+  - local
+  compliance_mode: false
   cost_optimization: true
   cost_preferences:
-    free: local          # Use local for free operations
-    low_cost: web_search # Use web search for low-cost operations
-    medium_cost: gemini  # Use Gemini for medium-cost operations
-    high_cost: claude    # Use Claude for high-cost operations
-# Current active project (null = no active project)
-current_project: null
-
-# =================================
-# AI Engine Configuration Examples
-# =================================
-# 
-# Example 1: All tasks use Claude
-# default_engine: claude
-# task_routing: {}  # Empty means all tasks use default
-#
-# Example 2: Code generation only with Cursor
-# default_engine: claude
-# task_routing:
-#   code_generation: cursor
-#
-# Example 3: All Gemini for cost efficiency
-# default_engine: gemini
-# task_routing: {}  # Empty means all tasks use default
-#
-# Example 4: Enterprise compliance mode
-# compliance_mode: true
-# allowed_engines: [gemini, local]
-# default_engine: gemini
-#
-# Example 5: Cost optimization enabled
-# cost_optimization: true
-# default_engine: claude
-# (System will automatically choose cheaper engines for simple tasks)
+    free: local
+    high_cost: claude
+    low_cost: web_search
+    medium_cost: gemini
+  default_engine: gemini
+  task_routing:
+    code_analysis: gemini
+    code_generation: cursor
+    document_generation: gemini
+    git_operations: local
+    shell_operations: local
+    web_browsing: web_browser
+    web_search: web_search
+current_project: test_project
 cursor:
   api_url: http://localhost:5000
   code_generation: true
   max_tokens: 4000
-  path: cursor  # macOS: /Applications/Cursor.app/Contents/Resources/app/bin/cursor
+  path: cursor
   temperature: 0.1
 gemini:
   max_tokens: 4000
@@ -79,4 +38,3 @@ llm:
   provider: anthropic
   temperature: 0.1
 projects_root_dir: projects
-# script_output_dir: generated_scripts  # Deprecated: Files are now saved to active project's src/ directory

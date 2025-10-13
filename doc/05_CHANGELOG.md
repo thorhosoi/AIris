@@ -1,5 +1,34 @@
 # Airis 変更履歴
 
+## [2.2.0] - 2025-10-13
+
+### 追加機能
+- **動的設定読み込み**: config.yaml変更時の自動反映機能
+- **デバッグコマンド**: `ai engine debug` で設定状態を詳細確認
+- **設定リロード機能**: コンテナ再起動なしで設定変更を反映
+
+### 改善
+- **Gemini API修正**: モデル名を `gemini-2.5-pro` に更新して404エラーを解決
+- **パッケージ更新**: `duckduckgo_search` から `ddgs` に移行
+- **設定保存機能修正**: `ai engine save` コマンドの動作を修正
+- **Docker設定改善**: イメージ名とプロジェクト名を明示的に指定
+- **コード品質向上**: 型ヒントとドキュメント文字列を追加
+
+### 修正
+- Gemini API 404エラー（モデル名の問題）
+- duckduckgo_search警告（パッケージ名変更）
+- ai engine save機能のバグ（config._config → config.settings）
+- Docker設定キャッシュ問題（動的読み込み実装）
+- Dockerイメージ名の重複問題（name: airis 追加）
+
+### 技術的変更
+- `airis/config.py`: 型ヒントとドキュメント追加
+- `airis/ai_engine_manager.py`: 動的設定読み込み実装
+- `airis/ai_engine_commands.py`: デバッグコマンド追加
+- `agents/gemini_agent.py`: モデル名を gemini-2.5-pro に変更
+- `agents/web_search_agent.py`: ddgs パッケージに移行
+- `docker-compose.yml`: name と image を明示的に指定
+
 ## [2.1.0] - 2025-10-13
 
 ### 追加機能

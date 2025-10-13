@@ -1,6 +1,9 @@
+name: airis
+
 services:
   airis:
     build: .
+    image: airis:latest
     container_name: airis_app
     working_dir: /app
     environment:

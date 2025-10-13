@@ -482,6 +482,9 @@ Task: {task_description}
         elif "info" in prompt_lower or "status" in prompt_lower:
             return ai_engine_commands.get_engine_info()
         
+        elif "debug" in prompt_lower:
+            return ai_engine_commands.debug_config()
+        
         elif "save" in prompt_lower:
             return ai_engine_commands.save_config()
         
@@ -498,5 +501,6 @@ Task: {task_description}
 - ai engine disable cost optimization
 - ai engine set availability <engine_name> <true/false>
 - ai engine info
+- ai engine debug
 - ai engine save
 - ai engine reset"""

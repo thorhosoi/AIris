@@ -126,7 +126,7 @@ class AIEngineCommands:
         """Save current configuration to config.yaml."""
         try:
             # Get current config
-            current_config = config._config
+            current_config = config.settings
             
             # Write to file
             config_path = "config.yaml"
@@ -136,6 +136,33 @@ class AIEngineCommands:
             return f"Configuration saved to {config_path}"
         except Exception as e:
             return f"Error saving configuration: {e}"
+    
+    @staticmethod
+    def debug_config() -> str:
+        """Debug configuration loading."""
+        import yaml
+        
+        # Read config file directly
+        with open("config.yaml", 'r') as f:
+            file_config = yaml.safe_load(f)
+        
+        # Get config from Config object
+        config_obj = config.settings
+        
+        result = "=== Debug Configuration ===\n\n"
+        result += "File config.yaml:\n"
+        result += f"  default_engine: {file_config.get('ai_engines', {}).get('default_engine')}\n"
+        result += f"  document_generation: {file_config.get('ai_engines', {}).get('task_routing', {}).get('document_generation')}\n\n"
+        
+        result += "Config object:\n"
+        result += f"  default_engine: {config.get('ai_engines.default_engine')}\n"
+        result += f"  document_generation: {config.get('ai_engines.task_routing.document_generation')}\n\n"
+        
+        result += "AIEngineManager:\n"
+        result += f"  default_engine: {ai_engine_manager.default_engine}\n"
+        result += f"  document_generation: {ai_engine_manager.task_routing.get('document_generation')}\n"
+        
+        return result
     
     @staticmethod
     def reset_to_defaults() -> str:

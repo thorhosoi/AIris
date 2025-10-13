@@ -22,6 +22,9 @@ class AIEngineManager:
     
     def _load_configuration(self):
         """Load AI engine configuration from config.yaml"""
+        # Reload config from file to get latest settings
+        self.config.settings = self.config._load_config()
+        
         self.default_engine = self.config.get("ai_engines.default_engine", "claude")
         self.task_routing = self.config.get("ai_engines.task_routing", {})
         self.compliance_mode = self.config.get("ai_engines.compliance_mode", False)
@@ -50,6 +53,8 @@ class AIEngineManager:
         Returns:
             Selected engine name
         """
+        # Reload configuration to get latest settings
+        self._load_configuration()
         # Check compliance mode first
         if self.compliance_mode:
             return self._get_compliant_engine(task_type, user_prompt)
@@ -209,6 +214,8 @@ class AIEngineManager:
     
     def get_engine_info(self) -> Dict[str, Any]:
         """Get information about all engines."""
+        # Reload configuration to get latest settings
+        self._load_configuration()
         return {
             "default_engine": self.default_engine,
             "available_engines": self.get_available_engines(),

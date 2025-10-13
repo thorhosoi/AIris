@@ -1,6 +1,6 @@
 # Project Airis Knowledge Base
 
-This document summarizes the current state and understanding of the "Airis" project as of 2025-10-13. It serves as a comprehensive knowledge repository for maintaining context and tracking project evolution.
+This document summarizes the current state and understanding of the "Airis" project as of 2025-10-13 (v2.2.0). It serves as a comprehensive knowledge repository for maintaining context and tracking project evolution.
 
 **Note:** This is a living document that will be continuously updated as new information about the project becomes available or as its state changes. It also records important environmental and procedural notes to avoid repeating troubleshooting steps.
 
@@ -316,8 +316,8 @@ AIris/
 │   ├── README.md
 │   └── TASKS.md
 ├── test_files/            # テスト関連ファイル
-│   ├── run_tests.py       # テスト実行スクリプト
-│   ├── manual_test_runner.sh
+│   ├── run_tests.py       # 自動テスト実行スクリプト
+│   ├── manual_test_runner.sh # 手動テスト支援スクリプト
 │   └── test_projects/     # テスト用プロジェクト
 ├── tests/                 # ユニットテスト
 │   ├── __init__.py
@@ -335,7 +335,16 @@ AIris/
 └── .gitignore             # Git除外設定
 ```
 
-### Key Improvements Made
+### Key Improvements Made (v2.2.0)
+- **Gemini API Fix**: Updated model name to `gemini-2.5-pro` to resolve 404 errors
+- **Package Updates**: Migrated from `duckduckgo_search` to `ddgs` package
+- **Dynamic Configuration**: Implemented automatic config reload without container restart
+- **Docker Optimization**: Added explicit project name and image tagging
+- **Code Quality**: Enhanced type hints and documentation strings
+- **Debug Features**: Added `ai engine debug` command for troubleshooting
+- **Configuration Management**: Fixed `ai engine save` functionality
+
+### Previous Improvements (v2.0-2.1)
 - **File Cleanup**: Removed unnecessary files (fibonacci.py, test_api_keys.py, test reports)
 - **Test Organization**: Moved all test files to test_files/ directory
 - **Project Structure**: Organized test projects under test_files/test_projects/

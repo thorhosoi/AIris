@@ -6,7 +6,7 @@ pyyaml
 python-dotenv
 pytest
 requests
-duckduckgo-search
+ddgs
 beautifulsoup4
 lxml
 google-generativeai

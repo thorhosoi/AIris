@@ -1,6 +1,6 @@
 from .base import BaseAgent
 from airis.llm import LLMClient
-from duckduckgo_search import DDGS
+from ddgs import DDGS
 
 class WebSearchAgent(BaseAgent):
     """
