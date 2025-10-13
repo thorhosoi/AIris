@@ -45,5 +45,11 @@ venv.bak/
 .idea/
 .vscode/
 
-generated_scripts/
-projects/
+# Test files and projects
+test_files/test_projects/
+manual_test_logs/
+test_report_*.json
+
+# Temporary files
+*.tmp
+*.log
