@@ -13,7 +13,6 @@ class WebSearchAgent(BaseAgent):
         """
         Performs a web search based on the instruction and context, then returns a summary.
         """
-        print(f"--- WebSearchAgent received instruction: '{instruction}' ---")
 
         prompt = f"""
         You are an expert at crafting search engine queries. 
@@ -28,9 +27,7 @@ class WebSearchAgent(BaseAgent):
         Current User Instruction: "{instruction}"
         """
         
-        print("--- WebSearchAgent extracting search query from instruction... ---")
         query = self.llm_client.invoke(prompt).content.strip()
-        print(f"--- WebSearchAgent performing search for: '{query}' ---")
 
         try:
             with DDGS() as ddgs:
@@ -58,7 +55,6 @@ class WebSearchAgent(BaseAgent):
             {results_text}
             """
 
-            print("--- WebSearchAgent summarizing results... ---")
             summary = self.llm_client.invoke(summary_prompt)
             return summary.content
 

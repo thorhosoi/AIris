@@ -156,7 +156,6 @@ Markdown形式で日本語で提供してください。"""
         """
         Execute Gemini-related operations based on instruction.
         """
-        print(f"--- GeminiAgent received instruction: '{instruction}' ---")
         
         if not self.api_key:
             return "エラー: GEMINI_API_KEYが設定されていません。"

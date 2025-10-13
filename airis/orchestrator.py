@@ -127,7 +127,6 @@ class Orchestrator:
         selected_engine = ai_engine_manager.get_engine_for_task(task_type, user_prompt)
         agent_name = self._map_engine_to_agent(selected_engine, user_prompt)
         
-        print(f"Task type: {task_type}, Selected engine: {selected_engine}, Agent: {agent_name}") 
 
         agent = self.agents[agent_name]
         

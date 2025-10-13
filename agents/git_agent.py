@@ -91,7 +91,6 @@ class GitAgent(BaseAgent):
         """
         Execute git operations based on the instruction.
         """
-        print(f"--- GitAgent received instruction: '{instruction}' ---")
         
         # Check if we're in a git repository
         if not self._check_git_repo():

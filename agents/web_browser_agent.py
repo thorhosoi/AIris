@@ -49,7 +49,6 @@ class WebBrowserAgent(BaseAgent):
         """
         Extracts a URL from an instruction or context, fetches its content, and provides a summary.
         """
-        print(f"--- WebBrowserAgent received instruction: '{instruction}' ---")
         
         # Combine instruction and context to find a URL
         text_to_search = instruction + "\n" + (context or "")
@@ -58,7 +57,6 @@ class WebBrowserAgent(BaseAgent):
         if not url:
             return "Error: No URL found in the instruction."
 
-        print(f"--- WebBrowserAgent fetching content from: {url} ---")
         content = self._fetch_and_parse(url)
 
         if content.startswith("Error:"):
@@ -75,6 +73,5 @@ class WebBrowserAgent(BaseAgent):
         ---
         """
 
-        print("--- WebBrowserAgent summarizing content... ---")
         summary = self.llm_client.invoke(summary_prompt)
         return summary.content

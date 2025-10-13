@@ -96,7 +96,6 @@ class DocumentCompletionAgent(BaseAgent):
         """
         Check and complete documents based on the instruction.
         """
-        print(f"--- DocumentCompletionAgent received instruction: '{instruction}' ---")
         
         # Extract project path from instruction or context
         project_path = None
@@ -147,7 +146,6 @@ class DocumentCompletionAgent(BaseAgent):
                 results.append(f"❌ {filename}: 未完成 - {reason}")
                 
                 # Complete the document
-                print(f"--- DocumentCompletionAgent completing {filename} ---")
                 completed_content = self._complete_document(content, doc_type, os.path.basename(project_path))
                 
                 # Save completed document
