@@ -1,0 +1,12 @@
+typer
+langchain
+langchain-anthropic
+docker
+pyyaml
+python-dotenv
+pytest
+requests
+duckduckgo-search
+beautifulsoup4
+lxml
+google-generativeai

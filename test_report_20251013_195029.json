@@ -1,0 +1,299 @@
+{
+  "summary": {
+    "total_tests": 26,
+    "passed_tests": 19,
+    "failed_tests": 7,
+    "success_rate": 73.07692307692307,
+    "total_time": 109.084281,
+    "start_time": "2025-10-13T19:48:40.638850",
+    "end_time": "2025-10-13T19:50:29.723238"
+  },
+  "results": [
+    {
+      "test_id": "AI-001",
+      "test_name": "デフォルトエンジン設定",
+      "command": "ai engine set default gemini",
+      "success": true,
+      "execution_time": 1.6685309410095215,
+      "return_code": 0,
+      "stdout": "Received task: ai engine set default gemini\n--- RESULT ---\nDefault engine set to: gemini\n",
+      "stderr": "time=\"2025-10-13T19:48:40+09:00\" level=warning msg=\"Found orphan containers ([airis-airis-run-3f421cd61684]) for this project. If you removed or renamed this service in your compose file, you can run this command with the --remove-orphans flag to clean it up.\"\n",
+      "timestamp": "2025-10-13T19:48:42.307416"
+    },
+    {
+      "test_id": "AI-002",
+      "test_name": "タスク別エンジン設定",
+      "command": "ai engine set task code_generation cursor",
+      "success": true,
+      "execution_time": 1.109584093093872,
+      "return_code": 0,
+      "stdout": "Received task: ai engine set task code_generation cursor\n--- RESULT ---\nError: Engine 'code_generation' is not available. Available engines: ['claude', 'gemini', 'web_search', 'web_browser', 'local']\n",
+      "stderr": "time=\"2025-10-13T19:48:42+09:00\" level=warning msg=\"Found orphan containers ([airis-airis-run-3f421cd61684]) for this project. If you removed or renamed this service in your compose file, you can run this command with the --remove-orphans flag to clean it up.\"\n",
+      "timestamp": "2025-10-13T19:48:43.417235"
+    },
+    {
+      "test_id": "AI-003",
+      "test_name": "エンジン情報表示",
+      "command": "ai engine info",
+      "success": true,
+      "execution_time": 1.0419807434082031,
+      "return_code": 0,
+      "stdout": "Received task: ai engine info\n--- RESULT ---\n=== AI Engine Information ===\nDefault Engine: gemini\nAvailable Engines: claude, gemini, web_search, web_browser, local\nCompliance Mode: False\nCost Optimization: True\n\nTask Routing:\n  code_analysis: gemini\n  code_generation: cursor\n  document_generation: claude\n  git_operations: local\n  shell_operations: local\n  web_browsing: web_browser\n  web_search: web_search\n\nEngine Availability:\n  claude: ✓\n  gemini: ✓\n  cursor: ✓\n  web_search: ✓\n  web_browser: ✓\n  local: ✓\n\n",
+      "stderr": "time=\"2025-10-13T19:48:43+09:00\" level=warning msg=\"Found orphan containers ([airis-airis-run-3f421cd61684]) for this project. If you removed or renamed this service in your compose file, you can run this command with the --remove-orphans flag to clean it up.\"\n",
+      "timestamp": "2025-10-13T19:48:44.459297"
+    },
+    {
+      "test_id": "AI-004",
+      "test_name": "設定保存",
+      "command": "ai engine save",
+      "success": false,
+      "execution_time": 1.0553641319274902,
+      "return_code": 0,
+      "stdout": "Received task: ai engine save\n--- RESULT ---\nError saving configuration: 'Config' object has no attribute '_config'\n",
+      "stderr": "time=\"2025-10-13T19:48:44+09:00\" level=warning msg=\"Found orphan containers ([airis-airis-run-3f421cd61684]) for this project. If you removed or renamed this service in your compose file, you can run this command with the --remove-orphans flag to clean it up.\"\n",
+      "timestamp": "2025-10-13T19:48:45.514736"
+    },
+    {
+      "test_id": "AI-006",
+      "test_name": "コンプライアンスモード有効化",
+      "command": "ai engine enable compliance gemini local",
+      "success": true,
+      "execution_time": 1.0494897365570068,
+      "return_code": 0,
+      "stdout": "Received task: ai engine enable compliance gemini local\n--- RESULT ---\nCompliance mode enabled. Allowed engines: ['gemini', 'local']\n",
+      "stderr": "time=\"2025-10-13T19:48:45+09:00\" level=warning msg=\"Found orphan containers ([airis-airis-run-3f421cd61684]) for this project. If you removed or renamed this service in your compose file, you can run this command with the --remove-orphans flag to clean it up.\"\n",
+      "timestamp": "2025-10-13T19:48:46.564296"
+    },
+    {
+      "test_id": "AI-007",
+      "test_name": "コンプライアンスモード無効化",
+      "command": "ai engine disable compliance",
+      "success": true,
+      "execution_time": 1.1064770221710205,
+      "return_code": 0,
+      "stdout": "Received task: ai engine disable compliance\n--- RESULT ---\nCompliance mode disabled\n",
+      "stderr": "time=\"2025-10-13T19:48:46+09:00\" level=warning msg=\"Found orphan containers ([airis-airis-run-3f421cd61684]) for this project. If you removed or renamed this service in your compose file, you can run this command with the --remove-orphans flag to clean it up.\"\n",
+      "timestamp": "2025-10-13T19:48:47.670827"
+    },
+    {
+      "test_id": "AI-009",
+      "test_name": "コスト最適化モード有効化",
+      "command": "ai engine enable cost optimization",
+      "success": true,
+      "execution_time": 1.0227031707763672,
+      "return_code": 0,
+      "stdout": "Received task: ai engine enable cost optimization\n--- RESULT ---\nCost optimization enabled. Preferences: {'high_cost': 'claude', 'medium_cost': 'gemini', 'low_cost': 'web_search', 'free': 'local'}\n",
+      "stderr": "time=\"2025-10-13T19:48:47+09:00\" level=warning msg=\"Found orphan containers ([airis-airis-run-3f421cd61684]) for this project. If you removed or renamed this service in your compose file, you can run this command with the --remove-orphans flag to clean it up.\"\n",
+      "timestamp": "2025-10-13T19:48:48.693589"
+    },
+    {
+      "test_id": "CODE-001",
+      "test_name": "基本コード生成",
+      "command": "code generate fibonacci function",
+      "success": true,
+      "execution_time": 3.638305187225342,
+      "return_code": 0,
+      "stdout": "Received task: code generate fibonacci function\nTask type: code_generation, Selected engine: gemini, Agent: gemini\n--- GeminiAgent received instruction: 'code generate fibonacci function' ---\n--- RESULT ---\nエラー: Gemini API呼び出しに失敗しました - 404 models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.\n",
+      "stderr": "time=\"2025-10-13T19:48:48+09:00\" level=warning msg=\"Found orphan containers ([airis-airis-run-3f421cd61684]) for this project. If you removed or renamed this service in your compose file, you can run this command with the --remove-orphans flag to clean it up.\"\nWARNING: All log messages before absl::InitializeLog() is called are written to STDERR\nE0000 00:00:1760352529.481048       1 alts_credentials.cc:93] ALTS creds ignored. Not running on GCP and untrusted ALTS is not enabled.\n",
+      "timestamp": "2025-10-13T19:48:52.332002"
+    },
+    {
+      "test_id": "CODE-002",
+      "test_name": "複雑なコード生成",
+      "command": "code generate web scraper",
+      "success": false,
+      "execution_time": 3.7092971801757812,
+      "return_code": 0,
+      "stdout": "Received task: code generate web scraper\nTask type: code_generation, Selected engine: gemini, Agent: gemini\n--- GeminiAgent received instruction: 'code generate web scraper' ---\n--- RESULT ---\nエラー: Gemini API呼び出しに失敗しました - 404 models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.\n",
+      "stderr": "time=\"2025-10-13T19:48:52+09:00\" level=warning msg=\"Found orphan containers ([airis-airis-run-3f421cd61684]) for this project. If you removed or renamed this service in your compose file, you can run this command with the --remove-orphans flag to clean it up.\"\nWARNING: All log messages before absl::InitializeLog() is called are written to STDERR\nE0000 00:00:1760352533.536771       1 alts_credentials.cc:93] ALTS creds ignored. Not running on GCP and untrusted ALTS is not enabled.\n",
+      "timestamp": "2025-10-13T19:48:56.041411"
+    },
+    {
+      "test_id": "CURSOR-001",
+      "test_name": "Cursorコード生成",
+      "command": "code generate calculator",
+      "success": false,
+      "execution_time": 3.511579990386963,
+      "return_code": 0,
+      "stdout": "Received task: code generate calculator\nTask type: code_generation, Selected engine: gemini, Agent: gemini\n--- GeminiAgent received instruction: 'code generate calculator' ---\n--- RESULT ---\nエラー: Gemini API呼び出しに失敗しました - 404 models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.\n",
+      "stderr": "time=\"2025-10-13T19:48:56+09:00\" level=warning msg=\"Found orphan containers ([airis-airis-run-3f421cd61684]) for this project. If you removed or renamed this service in your compose file, you can run this command with the --remove-orphans flag to clean it up.\"\nWARNING: All log messages before absl::InitializeLog() is called are written to STDERR\nE0000 00:00:1760352536.885367       1 alts_credentials.cc:93] ALTS creds ignored. Not running on GCP and untrusted ALTS is not enabled.\n",
+      "timestamp": "2025-10-13T19:48:59.553563"
+    },
+    {
+      "test_id": "CURSOR-003",
+      "test_name": "Cursorバージョン確認",
+      "command": "cursor version",
+      "success": true,
+      "execution_time": 1.6780140399932861,
+      "return_code": 0,
+      "stdout": "Received task: cursor version\nTask type: code_generation, Selected engine: gemini, Agent: cursor\n--- CursorAgent received instruction: 'cursor version' ---\n--- RESULT ---\nCursor バージョン: Error: [Errno 2] No such file or directory: 'cursor'\n",
+      "stderr": "time=\"2025-10-13T19:48:59+09:00\" level=warning msg=\"Found orphan containers ([airis-airis-run-3f421cd61684]) for this project. If you removed or renamed this service in your compose file, you can run this command with the --remove-orphans flag to clean it up.\"\n",
+      "timestamp": "2025-10-13T19:49:01.232102"
+    },
+    {
+      "test_id": "GEMINI-001",
+      "test_name": "Geminiコード分析",
+      "command": "gemini analyze code",
+      "success": true,
+      "execution_time": 2.409611940383911,
+      "return_code": 0,
+      "stdout": "Received task: gemini analyze code\nTask type: code_analysis, Selected engine: gemini, Agent: gemini\n--- GeminiAgent received instruction: 'gemini analyze code' ---\n--- RESULT ---\nエラー: 分析するコードが提供されていません。\n",
+      "stderr": "time=\"2025-10-13T19:49:01+09:00\" level=warning msg=\"Found orphan containers ([airis-airis-run-3f421cd61684]) for this project. If you removed or renamed this service in your compose file, you can run this command with the --remove-orphans flag to clean it up.\"\n",
+      "timestamp": "2025-10-13T19:49:03.641798"
+    },
+    {
+      "test_id": "WEB-001",
+      "test_name": "基本Web検索",
+      "command": "search Python best practices",
+      "success": true,
+      "execution_time": 12.21507215499878,
+      "return_code": 0,
+      "stdout": "Received task: search Python best practices\nTask type: web_search, Selected engine: gemini, Agent: web_search\n--- WebSearchAgent received instruction: 'search Python best practices' ---\n--- WebSearchAgent extracting search query from instruction... ---\n--- WebSearchAgent performing search for: 'Python best practices programming guidelines 2024' ---\n--- WebSearchAgent summarizing results... ---\n--- RESULT ---\nBased on the search results provided, I'm unable to give you a comprehensive answer about Python best practices, as the results don't directly address this topic. \n\nThe search results primarily contain:\n- Information about Python version selection (suggesting Python 3.12.x as the stable version as of 2025)\n- Technical troubleshooting questions about Python installation paths, SSL certificates, and specific coding tasks\n- One result mentioning dictionary iteration, which touches on a coding practice\n\n**Limited insight from the results:**\n- **Use current Python versions**: Python 3.12.x is mentioned as the current stable version, with 3.13 in development (Result 1)\n- **Dictionary iteration**: When iterating over dictionaries, you can iterate directly over the dictionary to get keys (Result 4)\n\nFor comprehensive Python best practices, you would need to search with more specific terms like \"Python coding standards,\" \"PEP 8,\" \"Python style guide,\" or \"Python development best practices\" to get more relevant results covering topics like code formatting, naming conventions, documentation, testing, and design patterns.\n",
+      "stderr": "time=\"2025-10-13T19:49:03+09:00\" level=warning msg=\"Found orphan containers ([airis-airis-run-3f421cd61684]) for this project. If you removed or renamed this service in your compose file, you can run this command with the --remove-orphans flag to clean it up.\"\n/app/agents/web_search_agent.py:36: RuntimeWarning: This package (`duckduckgo_search`) has been renamed to `ddgs`! Use `pip install ddgs` instead.\n  with DDGS() as ddgs:\n",
+      "timestamp": "2025-10-13T19:49:15.857014"
+    },
+    {
+      "test_id": "WEB-002",
+      "test_name": "日本語Web検索",
+      "command": "search 機械学習 最新技術",
+      "success": true,
+      "execution_time": 4.195101261138916,
+      "return_code": 0,
+      "stdout": "Received task: search 機械学習 最新技術\nTask type: web_search, Selected engine: gemini, Agent: web_search\n--- WebSearchAgent received instruction: 'search 機械学習 最新技術' ---\n--- WebSearchAgent extracting search query from instruction... ---\n--- WebSearchAgent performing search for: '機械学習 最新技術 2024' ---\n--- RESULT ---\nNo search results found.\n",
+      "stderr": "time=\"2025-10-13T19:49:15+09:00\" level=warning msg=\"Found orphan containers ([airis-airis-run-3f421cd61684]) for this project. If you removed or renamed this service in your compose file, you can run this command with the --remove-orphans flag to clean it up.\"\n/app/agents/web_search_agent.py:36: RuntimeWarning: This package (`duckduckgo_search`) has been renamed to `ddgs`! Use `pip install ddgs` instead.\n  with DDGS() as ddgs:\n",
+      "timestamp": "2025-10-13T19:49:20.052269"
+    },
+    {
+      "test_id": "BROWSE-001",
+      "test_name": "URL取得",
+      "command": "browse https://github.com",
+      "success": true,
+      "execution_time": 8.436375856399536,
+      "return_code": 0,
+      "stdout": "Received task: browse https://github.com\nTask type: web_browsing, Selected engine: gemini, Agent: web_browser\n--- WebBrowserAgent received instruction: 'browse https://github.com' ---\n--- WebBrowserAgent fetching content from: https://github.com ---\n--- WebBrowserAgent summarizing content... ---\n--- RESULT ---\n# Summary of GitHub Homepage\n\nGitHub is an AI-powered developer platform that enables teams to build and ship software collaboratively. Key features include:\n\n**Main Products:**\n- **GitHub Copilot** - AI-powered coding assistant that helps developers write code 55% faster\n- **GitHub Actions** - CI/CD automation tools\n- **GitHub Codespaces** - Cloud-based development environments\n- **GitHub Advanced Security** - Built-in security features with AI-assisted vulnerability detection (Copilot Autofix)\n\n**Core Capabilities:**\n- Code collaboration and version control\n- Project management (GitHub Issues & Projects)\n- Code review workflows\n- Team discussions\n- 17,000+ integrations via GitHub Marketplace\n\n**Notable Achievements:**\n- Used by major companies (American Airlines, Duolingo, Ford, Mercedes-Benz, Spotify, etc.)\n- Duolingo reported 25% developer speed increase\n- 7x faster vulnerability fixes\n- 90% coverage of alert types with Copilot Autofix\n\nThe platform serves developers and businesses of all sizes across industries including technology, automotive, and financial services, positioning itself as the world's most widely adopted AI-powered developer platform.\n",
+      "stderr": "time=\"2025-10-13T19:49:20+09:00\" level=warning msg=\"Found orphan containers ([airis-airis-run-3f421cd61684]) for this project. If you removed or renamed this service in your compose file, you can run this command with the --remove-orphans flag to clean it up.\"\n",
+      "timestamp": "2025-10-13T19:49:28.488716"
+    },
+    {
+      "test_id": "GIT-001",
+      "test_name": "Git状態確認",
+      "command": "git status",
+      "success": true,
+      "execution_time": 1.2068979740142822,
+      "return_code": 0,
+      "stdout": "Received task: git status\nTask type: git_operations, Selected engine: gemini, Agent: git\n--- GitAgent received instruction: 'git status' ---\n--- RESULT ---\nGit status:\nM PROJECT_KNOWLEDGE.md\n M agents/cursor_agent.py\n M agents/gemini_agent.py\n M airis/orchestrator.py\n M config.yaml\n M doc/03_ARCHITECTURE_UPDATE.md\n M doc/04_TECHNICAL_SPECIFICATIONS.md\n M doc/05_CHANGELOG.md\n M docker-compose.yml\n?? airis/ai_engine_commands.py\n?? airis/ai_engine_manager.py\n?? doc/06_TEST_PLAN.md\n?? run_tests.py\n?? test_api_keys.py\n",
+      "stderr": "time=\"2025-10-13T19:49:28+09:00\" level=warning msg=\"Found orphan containers ([airis-airis-run-3f421cd61684]) for this project. If you removed or renamed this service in your compose file, you can run this command with the --remove-orphans flag to clean it up.\"\n",
+      "timestamp": "2025-10-13T19:49:29.695703"
+    },
+    {
+      "test_id": "GIT-002",
+      "test_name": "Git自動ワークフロー",
+      "command": "git auto",
+      "success": true,
+      "execution_time": 2.324434995651245,
+      "return_code": 0,
+      "stdout": "Received task: git auto\nTask type: git_operations, Selected engine: gemini, Agent: git\n--- GitAgent received instruction: 'git auto' ---\n--- RESULT ---\n✅ Git configuration checked/set\n✅ Files added to staging area\n✅ Changes committed\n❌ Error pushing: Host key verification failed.\nfatal: Could not read from remote repository.\n\nPlease make sure you have the correct access rights\nand the repository exists.\n",
+      "stderr": "time=\"2025-10-13T19:49:29+09:00\" level=warning msg=\"Found orphan containers ([airis-airis-run-3f421cd61684]) for this project. If you removed or renamed this service in your compose file, you can run this command with the --remove-orphans flag to clean it up.\"\n",
+      "timestamp": "2025-10-13T19:49:32.020271"
+    },
+    {
+      "test_id": "SHELL-001",
+      "test_name": "基本シェルコマンド",
+      "command": "shell ls -la",
+      "success": true,
+      "execution_time": 4.9923059940338135,
+      "return_code": 0,
+      "stdout": "Received task: shell ls -la\nTask type: shell_operations, Selected engine: gemini, Agent: shell\n--- RESULT ---\nCommand executed successfully.\nOutput:\ntotal 88\ndrwxr-xr-x 21 root root   672 Oct 13 07:44 .\ndrwxr-xr-x  1 root root  4096 Oct 13 10:49 ..\n-rw-r--r--  1 root root   445 Oct 13 10:14 .env\ndrwxr-xr-x 15 root root   480 Oct 13 10:49 .git\n-rw-r--r--  1 root root   468 Oct 12 19:36 .gitignore\ndrwxr-xr-x  6 root root   192 Oct 12 13:36 .pytest_cache\n-rw-r--r--  1 root root   512 Oct 12 22:24 Dockerfile\n-rw-r--r--  1 root root 18763 Oct 13 10:49 PROJECT_KNOWLEDGE.md\n-rw-r--r--  1 root root 11955 Oct 13 07:44 PROJECT_KNOWLEDGE_JP.md\n-rw-r--r--  1 root root  3702 Oct 12 11:43 README.md\ndrwxr-xr-x 13 root root   416 Oct 13 08:32 agents\ndrwxr-xr-x 11 root root   352 Oct 13 10:35 airis\n-rw-r--r--  1 root root   871 Oct 13 10:48 config.yaml\n-rw-r--r--  1 root root   102 Oct 12 10:46 config.yaml.example\ndrwxr-xr-x 12 root root   384 Oct 13 10:46 doc\n-rw-r--r--  1 root root   738 Oct 13 10:31 docker-compose.yml\n-rw-r--r--  1 root root   499 Oct 12 13:47 fibonacci.py\ndrwxr-xr-x  2 root root    64 Oct 12 19:36 generated_scripts\ndrwxr-xr-x  8 root root   256 Oct 13 08:07 projects\n-rw-r--r--  1 root root   138 Oct 13 08:41 requirements.txt\n-rwxr-xr-x  1 root root 12037 Oct 13 10:47 run_tests.py\n-rw-r--r--  1 root root  1251 Oct 13 10:15 test_api_keys.py\ndrwxr-xr-x  5 root root   160 Oct 12 22:33 tests\n",
+      "stderr": "time=\"2025-10-13T19:49:32+09:00\" level=warning msg=\"Found orphan containers ([airis-airis-run-3f421cd61684]) for this project. If you removed or renamed this service in your compose file, you can run this command with the --remove-orphans flag to clean it up.\"\n",
+      "timestamp": "2025-10-13T19:49:37.012773"
+    },
+    {
+      "test_id": "PROJ-001",
+      "test_name": "プロジェクト作成",
+      "command": "create project test_project",
+      "success": false,
+      "execution_time": 11.816299200057983,
+      "return_code": 0,
+      "stdout": "Received task: create project test_project\nTask type: code_generation, Selected engine: web_search, Agent: web_search\n--- WebSearchAgent received instruction: 'create project test_project' ---\n--- WebSearchAgent extracting search query from instruction... ---\n--- WebSearchAgent performing search for: 'I need to clarify: This appears to be a command to create a project rather than a request for a search query. However, if you're looking for information on how to create a project, here's the search query:\n\nhow to create project test_project programming setup tutorial' ---\n--- WebSearchAgent summarizing results... ---\n--- RESULT ---\nI apologize, but the search results provided are not relevant to your instruction. The results are about the English word \"need\" and its usage in Chinese language learning contexts, which has nothing to do with creating a project.\n\nTo create a project called \"test_project\", I would need to know:\n- What type of project you want to create (software development, directory/folder, database, etc.)\n- What platform or tool you're using (GitHub, GitLab, IDE, command line, etc.)\n\n**General guidance for creating a project:**\n\n- **For a directory/folder:** `mkdir test_project`\n- **For a Git repository:** `git init test_project`\n- **For Python projects:** `django-admin startproject test_project` (Django) or `mkdir test_project && cd test_project`\n- **For Node.js:** `npm init test_project` or `mkdir test_project && cd test_project && npm init`\n\nCould you please clarify what type of project you'd like to create and on which platform?\n",
+      "stderr": "time=\"2025-10-13T19:49:37+09:00\" level=warning msg=\"Found orphan containers ([airis-airis-run-3f421cd61684]) for this project. If you removed or renamed this service in your compose file, you can run this command with the --remove-orphans flag to clean it up.\"\n/app/agents/web_search_agent.py:36: RuntimeWarning: This package (`duckduckgo_search`) has been renamed to `ddgs`! Use `pip install ddgs` instead.\n  with DDGS() as ddgs:\n",
+      "timestamp": "2025-10-13T19:49:48.829217"
+    },
+    {
+      "test_id": "PROJ-002",
+      "test_name": "プロジェクト切り替え",
+      "command": "switch project test_project",
+      "success": false,
+      "execution_time": 10.429949045181274,
+      "return_code": 0,
+      "stdout": "Received task: switch project test_project\nTask type: code_generation, Selected engine: web_search, Agent: web_search\n--- WebSearchAgent received instruction: 'switch project test_project' ---\n--- WebSearchAgent extracting search query from instruction... ---\n--- WebSearchAgent performing search for: 'gcloud config set project test_project' ---\n--- WebSearchAgent summarizing results... ---\n--- RESULT ---\nI apologize, but the search results provided are all about YouTube and do not contain any relevant information about switching to a project called \"test_project.\" \n\nThe instruction \"switch project test_project\" appears to be a command related to:\n- Project management software\n- Development environments (like Google Cloud Platform's `gcloud config set project`)\n- IDE or version control systems\n\nTo properly assist you with switching to \"test_project,\" I would need more context about:\n- What platform or tool you're using\n- Whether this is a cloud project, local development project, or organizational project\n\nThe search results appear to be unrelated to your actual query. Could you provide more details about what system or platform you're trying to switch projects in?\n",
+      "stderr": "time=\"2025-10-13T19:49:48+09:00\" level=warning msg=\"Found orphan containers ([airis-airis-run-3f421cd61684]) for this project. If you removed or renamed this service in your compose file, you can run this command with the --remove-orphans flag to clean it up.\"\n/app/agents/web_search_agent.py:36: RuntimeWarning: This package (`duckduckgo_search`) has been renamed to `ddgs`! Use `pip install ddgs` instead.\n  with DDGS() as ddgs:\n",
+      "timestamp": "2025-10-13T19:49:59.259266"
+    },
+    {
+      "test_id": "PROJ-003",
+      "test_name": "プロジェクト一覧",
+      "command": "list projects",
+      "success": true,
+      "execution_time": 1.1162869930267334,
+      "return_code": 0,
+      "stdout": "Received task: list projects\nTask type: code_generation, Selected engine: gemini, Agent: gemini\n--- GeminiAgent received instruction: 'list projects' ---\n--- RESULT ---\n利用可能なGeminiコマンド: analyze, document, improve, generate\n",
+      "stderr": "time=\"2025-10-13T19:49:59+09:00\" level=warning msg=\"Found orphan containers ([airis-airis-run-3f421cd61684]) for this project. If you removed or renamed this service in your compose file, you can run this command with the --remove-orphans flag to clean it up.\"\n",
+      "timestamp": "2025-10-13T19:50:00.375653"
+    },
+    {
+      "test_id": "DOC-001",
+      "test_name": "要件定義書生成",
+      "command": "generate requirements",
+      "success": false,
+      "execution_time": 3.6097970008850098,
+      "return_code": 0,
+      "stdout": "Received task: generate requirements\nTask type: code_generation, Selected engine: gemini, Agent: gemini\n--- GeminiAgent received instruction: 'generate requirements' ---\n--- RESULT ---\nエラー: Gemini API呼び出しに失敗しました - 404 models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.\n",
+      "stderr": "time=\"2025-10-13T19:50:00+09:00\" level=warning msg=\"Found orphan containers ([airis-airis-run-3f421cd61684]) for this project. If you removed or renamed this service in your compose file, you can run this command with the --remove-orphans flag to clean it up.\"\nWARNING: All log messages before absl::InitializeLog() is called are written to STDERR\nE0000 00:00:1760352601.130065       1 alts_credentials.cc:93] ALTS creds ignored. Not running on GCP and untrusted ALTS is not enabled.\n",
+      "timestamp": "2025-10-13T19:50:03.985575"
+    },
+    {
+      "test_id": "DOC-002",
+      "test_name": "設計書生成",
+      "command": "generate design",
+      "success": false,
+      "execution_time": 3.7483441829681396,
+      "return_code": 0,
+      "stdout": "Received task: generate design\nTask type: code_generation, Selected engine: gemini, Agent: gemini\n--- GeminiAgent received instruction: 'generate design' ---\n--- RESULT ---\nエラー: Gemini API呼び出しに失敗しました - 404 models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.\n",
+      "stderr": "time=\"2025-10-13T19:50:04+09:00\" level=warning msg=\"Found orphan containers ([airis-airis-run-3f421cd61684]) for this project. If you removed or renamed this service in your compose file, you can run this command with the --remove-orphans flag to clean it up.\"\nWARNING: All log messages before absl::InitializeLog() is called are written to STDERR\nE0000 00:00:1760352605.063017       1 alts_credentials.cc:93] ALTS creds ignored. Not running on GCP and untrusted ALTS is not enabled.\n",
+      "timestamp": "2025-10-13T19:50:07.734225"
+    },
+    {
+      "test_id": "DOC-003",
+      "test_name": "README生成",
+      "command": "generate readme",
+      "success": true,
+      "execution_time": 3.4532651901245117,
+      "return_code": 0,
+      "stdout": "Received task: generate readme\nTask type: code_generation, Selected engine: gemini, Agent: gemini\n--- GeminiAgent received instruction: 'generate readme' ---\n--- RESULT ---\nエラー: Gemini API呼び出しに失敗しました - 404 models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.\n",
+      "stderr": "time=\"2025-10-13T19:50:07+09:00\" level=warning msg=\"Found orphan containers ([airis-airis-run-3f421cd61684]) for this project. If you removed or renamed this service in your compose file, you can run this command with the --remove-orphans flag to clean it up.\"\nWARNING: All log messages before absl::InitializeLog() is called are written to STDERR\nE0000 00:00:1760352608.661509       1 alts_credentials.cc:93] ALTS creds ignored. Not running on GCP and untrusted ALTS is not enabled.\n",
+      "timestamp": "2025-10-13T19:50:11.187590"
+    },
+    {
+      "test_id": "E2E-001",
+      "test_name": "完全な開発サイクル",
+      "command": "create project integration_test && code generate hello world && generate requirements",
+      "success": true,
+      "execution_time": 14.304454803466797,
+      "return_code": 0,
+      "stdout": "Received task: create project integration_test && code generate hello world && generate requirements\nTask type: code_generation, Selected engine: web_search, Agent: web_search\n--- WebSearchAgent received instruction: 'create project integration_test && code generate hello world && generate requirements' ---\n--- WebSearchAgent extracting search query from instruction... ---\n--- WebSearchAgent performing search for: 'create project integration test code generate hello world requirements setup' ---\n--- WebSearchAgent summarizing results... ---\n--- RESULT ---\nI apologize, but the search results provided are not relevant to your instruction. The results are about creating Gmail accounts and Google Forms, which don't relate to creating a software project with code generation.\n\nTo properly execute your instruction \"create project integration_test && code generate hello world && generate requirements\", you would typically need:\n\n1. **Create project integration_test**: Use a project scaffolding tool or manually create a project directory structure\n2. **Generate hello world code**: Create a basic \"Hello World\" program in your chosen programming language\n3. **Generate requirements**: Create a requirements file (like requirements.txt for Python, package.json for Node.js, etc.)\n\n**Example for Python:**\n```bash\nmkdir integration_test\ncd integration_test\necho 'print(\"Hello World\")' > hello.py\necho '# Project requirements' > requirements.txt\n```\n\nIf you need specific guidance for a particular programming language or framework, please clarify which technology stack you're using, and I can provide more targeted instructions.\n",
+      "stderr": "time=\"2025-10-13T19:50:11+09:00\" level=warning msg=\"Found orphan containers ([airis-airis-run-3f421cd61684]) for this project. If you removed or renamed this service in your compose file, you can run this command with the --remove-orphans flag to clean it up.\"\n/app/agents/web_search_agent.py:36: RuntimeWarning: This package (`duckduckgo_search`) has been renamed to `ddgs`! Use `pip install ddgs` instead.\n  with DDGS() as ddgs:\n",
+      "timestamp": "2025-10-13T19:50:25.492202"
+    },
+    {
+      "test_id": "E2E-002",
+      "test_name": "複数エージェント連携",
+      "command": "search Python tutorial && code generate example",
+      "success": true,
+      "execution_time": 4.23046612739563,
+      "return_code": 0,
+      "stdout": "Received task: search Python tutorial && code generate example\nTask type: web_search, Selected engine: gemini, Agent: web_search\n--- WebSearchAgent received instruction: 'search Python tutorial && code generate example' ---\n--- WebSearchAgent extracting search query from instruction... ---\n--- WebSearchAgent performing search for: 'Python tutorial code generation examples' ---\n--- RESULT ---\nNo search results found.\n",
+      "stderr": "time=\"2025-10-13T19:50:25+09:00\" level=warning msg=\"Found orphan containers ([airis-airis-run-3f421cd61684]) for this project. If you removed or renamed this service in your compose file, you can run this command with the --remove-orphans flag to clean it up.\"\n/app/agents/web_search_agent.py:36: RuntimeWarning: This package (`duckduckgo_search`) has been renamed to `ddgs`! Use `pip install ddgs` instead.\n  with DDGS() as ddgs:\n",
+      "timestamp": "2025-10-13T19:50:29.722888"
+    }
+  ]
+}

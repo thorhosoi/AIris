@@ -1,0 +1,24 @@
+services:
+  airis:
+    build: .
+    container_name: airis_app
+    working_dir: /app
+    environment:
+      - HOST_PROJECT_DIR=${PWD}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+      - CURSOR_API_KEY=${CURSOR_API_KEY}
+    volumes:
+      # Mount the project directory
+      - .:/app
+      # Mount the docker socket to allow the app to manage sandboxes
+      - /var/run/docker.sock:/var/run/docker.sock
+    # Keep the container running for interactive development
+    tty: true
+    stdin_open: true
+    # Pass API keys via an .env file (not committed to git)
+    # Create a .env file with your API keys, e.g.:
+    # OPENAI_API_KEY=sk-...
+    # ANTHROPIC_API_KEY=sk-...
+    env_file:
+      - .env
