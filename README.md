@@ -37,7 +37,12 @@ Copy the example configuration file:
 cp config.yaml.example config.yaml
 ```
 
-You can edit this file to change the LLM provider or model name.
+You can edit this file to configure AI engines, LLM settings, and other options. The configuration includes:
+
+- **AI Engine Selection**: Choose which AI engine to use for different tasks
+- **Task Routing**: Override default engine for specific task types
+- **Compliance Mode**: Restrict to approved engines only
+- **Cost Optimization**: Automatically select cheaper engines for simple tasks
 
 **b. Create `.env` file**
 
@@ -84,6 +89,48 @@ You will be greeted with the Airis prompt (`> `). Start giving it instructions!
 - `Write a Python script to print the first 20 prime numbers.`
 
 To end the session, type `exit` or `quit`.
+
+## ⚙️ AI Engine Configuration
+
+### Quick Setup Examples
+
+**All tasks use Claude:**
+```yaml
+ai_engines:
+  default_engine: claude
+  task_routing: {}  # Empty means all tasks use default
+```
+
+**Code generation only with Cursor:**
+```yaml
+ai_engines:
+  default_engine: claude
+  task_routing:
+    code_generation: cursor
+```
+
+**All Gemini for cost efficiency:**
+```yaml
+ai_engines:
+  default_engine: gemini
+  task_routing: {}  # Empty means all tasks use default
+```
+
+**Enterprise compliance mode:**
+```yaml
+ai_engines:
+  compliance_mode: true
+  allowed_engines: [gemini, local]
+  default_engine: gemini
+```
+
+**Cost optimization enabled:**
+```yaml
+ai_engines:
+  cost_optimization: true
+  default_engine: claude
+  # System will automatically choose cheaper engines for simple tasks
+```
 
 ## 🛠️ For Developers
 
