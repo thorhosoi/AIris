@@ -74,19 +74,32 @@ The goal of the MVP is to validate the core user experience: a user gives an ins
 
 ## 7. Current Implemented Features
 
-- **CLI Interface:** User interaction via command-line prompts.
-- **Code Agent:** Generates and executes Python code in a Docker sandbox.
-- **Shell Agent:** Generates and executes shell commands in a Docker sandbox.
-- **Orchestrator:** Dispatches tasks to appropriate agents based on keywords.
-- **LLM Client:** Abstracts communication with LLMs (e.g., Anthropic Claude), loading API keys from `config.yaml` or `.env` files.
-- **Docker Sandbox:** Secure execution environment for generated code/commands.
-- **Filename Suggestion:** LLM suggests an appropriate filename for generated code.
-- **User Approval:** Prompts user for approval before saving generated code to a file.
-- **Dedicated Output Directory:** Saves generated scripts to a configurable directory (default: `generated_scripts/`).
-- **Docker Integration:** `Airis` itself runs within a Docker container, simplifying setup and ensuring portability.
-- **Unit Tests:** `pytest` based unit tests for the Orchestrator's core logic.
-- **Project Management:** Allows creation of new project directories (`projects/[project_name]/`) with predefined subdirectories (`doc/`, `src/`, `tests/`) and template files. Users can also switch between active projects, and generated code is saved to the active project's `src/` directory.
-- **Document Generation:** Generates requirements, design, or README documents for the active project's `doc/` directory based on LLM output.
+### Core Features
+- **CLI Interface:** User interaction via command-line prompts with conversational AI
+- **Multi-Agent Architecture:** Specialized agents for different task types
+- **AI Engine Selection System:** Dynamic selection of AI engines based on task requirements
+- **Project Management:** Complete project lifecycle management with automatic document generation
+- **Docker Sandbox:** Secure execution environment for all code and commands
+- **Git Integration:** Automatic version control with intelligent commit messages
+
+### Specialized Agents
+- **Code Agent:** Generates and executes Python code in a Docker sandbox
+- **Shell Agent:** Generates and executes shell commands in a Docker sandbox
+- **Web Search Agent:** Performs web searches using DuckDuckGo API
+- **Web Browser Agent:** Fetches and summarizes content from URLs
+- **Cursor Agent:** Integrates with Cursor editor for advanced code generation
+- **Gemini Agent:** Utilizes Google Gemini API for code analysis and document improvement
+- **Git Agent:** Handles all git operations (add, commit, push, status)
+- **Document Completion Agent:** Automatically checks and completes incomplete documents
+
+### Advanced Capabilities
+- **Multi-Language Support:** Japanese and English documentation generation
+- **Intelligent Task Routing:** AI-powered task classification and agent selection
+- **Compliance Mode:** Corporate policy compliance with restricted AI engine usage
+- **Cost Optimization:** Task complexity-based engine selection for cost efficiency
+- **Document Quality Assurance:** Automatic completeness checking and completion
+- **Cross-Platform Compatibility:** Works on Windows, macOS, and Linux
+- **Comprehensive Testing:** Automated and manual testing frameworks
 
 ## 8. Recent Troubleshooting and Resolutions (2025-10-13)
 
@@ -164,8 +177,13 @@ This section outlines established conventions and user preferences for the Airis
 - **Git Management Agent:** Handles git operations (add, commit, push) automatically
 - **Web Search Agent:** Performs web searches using DuckDuckGo
 - **Web Browser Agent:** Fetches and summarizes content from URLs
+- **Cursor Agent:** Advanced code generation with Cursor editor integration
+- **Gemini Agent:** Google Gemini API integration for code analysis
 - **Japanese Documentation:** All generated documents are now in Japanese
 - **Auto Git Commit:** Code changes are automatically committed to git
+- **AI Engine Selection System:** Dynamic AI engine selection based on task requirements
+- **Compliance Mode:** Corporate policy compliance with restricted AI engine usage
+- **Cost Optimization:** Task complexity-based engine selection for cost efficiency
 
 ### Technical Decisions
 - **Max Tokens:** Reduced to 4000 to avoid API rate limits
@@ -176,15 +194,20 @@ This section outlines established conventions and user preferences for the Airis
 - **Cursor Integration:** Code generation delegated to Cursor for better quality
 - **Compliance Mode:** Added corporate policy compliance features
 - **Cost Optimization:** Implemented task complexity-based engine selection
+- **File Organization:** Cleaned up project structure and organized test files
+- **Privacy Protection:** Removed all personal information from git history
+- **Cross-Platform Support:** Eliminated absolute paths for better portability
 
 ### Architecture Updates
-- **Agent System:** Added 4 new agents (DocumentCompletion, Git, WebSearch, WebBrowser)
-- **Orchestrator:** Enhanced with keyword-based routing for new agents
+- **Agent System:** Added 6 new agents (DocumentCompletion, Git, WebSearch, WebBrowser, Cursor, Gemini)
+- **Orchestrator:** Enhanced with intelligent task routing and AI engine selection
 - **Document Generation:** Improved prompts for Japanese documentation
 - **Code Execution:** Fixed temp_code.py issues with base64 encoding approach
 - **AI Engine Manager:** Added intelligent engine selection system
 - **Cursor Agent:** Enhanced with code generation capabilities
 - **Configuration System:** YAML-based flexible configuration management
+- **Project Structure:** Organized test files and cleaned up unnecessary files
+- **Documentation:** Added comprehensive Japanese README and feature guides
 
 ## 11. AI Engine Selection System
 
@@ -268,3 +291,69 @@ The system automatically assesses task complexity based on keywords:
 3. **Cost Optimization**: Use cheapest engine for simple tasks
 4. **Code Generation Only Cursor**: Use Cursor only for code generation
 5. **Hybrid Approach**: Different engines for different task types
+
+## 12. Project Organization and Structure
+
+### Current File Organization
+```
+AIris/
+├── agents/                 # AIエージェント
+│   ├── base.py            # 基底クラス
+│   ├── code_agent.py      # コード生成エージェント
+│   ├── shell_agent.py     # シェルコマンドエージェント
+│   ├── web_search_agent.py # ウェブ検索エージェント
+│   ├── web_browser_agent.py # ウェブブラウジングエージェント
+│   ├── cursor_agent.py    # Cursorエディタ連携エージェント
+│   ├── gemini_agent.py    # Gemini API連携エージェント
+│   ├── git_agent.py       # Git操作エージェント
+│   └── document_completion_agent.py # ドキュメント完成エージェント
+├── airis/                  # メインアプリケーション
+│   ├── main.py            # CLIエントリーポイント
+│   ├── orchestrator.py    # タスクオーケストレーター
+│   ├── llm.py             # LLMクライアント
+│   ├── sandbox.py         # Dockerサンドボックス管理
+│   ├── config.py          # 設定管理
+│   ├── ai_engine_manager.py # AIエンジン選択管理
+│   └── ai_engine_commands.py # AIエンジンコマンド処理
+├── doc/                    # プロジェクトドキュメント
+│   ├── 00_PROJECT_PROPOSAL.md
+│   ├── 01_REQUIREMENTS_DEFINITION.md
+│   ├── 02_SYSTEM_DESIGN.md
+│   ├── 03_ARCHITECTURE_UPDATE.md
+│   ├── 04_TECHNICAL_SPECIFICATIONS.md
+│   ├── 05_CHANGELOG.md
+│   ├── 06_TEST_PLAN.md
+│   ├── 07_MANUAL_TEST_GUIDE.md
+│   ├── 08_MANUAL_TEST_CHECKLIST.md
+│   ├── 09_FEATURE_GUIDE.md
+│   ├── CONTRIBUTING.md
+│   ├── README.md
+│   └── TASKS.md
+├── test_files/            # テスト関連ファイル
+│   ├── run_tests.py       # テスト実行スクリプト
+│   ├── manual_test_runner.sh
+│   └── test_projects/     # テスト用プロジェクト
+├── tests/                 # ユニットテスト
+│   ├── __init__.py
+│   └── test_orchestrator.py
+├── README.md              # 英語版README
+├── README_JP.md           # 日本語版README
+├── FEATURES.md            # 機能一覧
+├── PROJECT_KNOWLEDGE.md   # プロジェクト知識ベース（英語）
+├── PROJECT_KNOWLEDGE_JP.md # プロジェクト知識ベース（日本語）
+├── config.yaml            # 設定ファイル
+├── config.yaml.example    # 設定ファイルサンプル
+├── requirements.txt       # Python依存関係
+├── Dockerfile             # Dockerイメージ定義
+├── docker-compose.yml     # Docker Compose設定
+└── .gitignore             # Git除外設定
+```
+
+### Key Improvements Made
+- **File Cleanup**: Removed unnecessary files (fibonacci.py, test_api_keys.py, test reports)
+- **Test Organization**: Moved all test files to test_files/ directory
+- **Project Structure**: Organized test projects under test_files/test_projects/
+- **Documentation**: Added comprehensive Japanese README and feature guides
+- **Privacy Protection**: Completely removed personal information from git history
+- **Cross-Platform Support**: Eliminated absolute paths for better portability
+- **Git Management**: Updated .gitignore for better test file management
