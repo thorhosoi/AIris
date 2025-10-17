@@ -7,8 +7,10 @@ class WebSearchAgent(BaseAgent):
     Agent that performs a web search using DuckDuckGo.
     """
     def __init__(self):
-        # Use AI engine specified in config for web search
-        self.llm_client = LLMClient("web_search")
+        # WebSearchAgent uses default engine for summarization, not web_search itself
+        # (web_search is for the search action, not the LLM)
+        from airis.llm import LLMClient
+        self.llm_client = LLMClient("orchestration")
 
     def execute(self, instruction: str, context: str | None = None, **kwargs) -> str:
         """

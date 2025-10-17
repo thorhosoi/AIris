@@ -9,8 +9,10 @@ class WebBrowserAgent(BaseAgent):
     Agent that fetches content from a URL and summarizes it.
     """
     def __init__(self):
-        # Use AI engine specified in config for web browsing
-        self.llm_client = LLMClient("web_browsing")
+        # WebBrowserAgent uses default engine for summarization, not web_browser itself
+        # (web_browser is for the browsing action, not the LLM)
+        from airis.llm import LLMClient
+        self.llm_client = LLMClient("orchestration")
 
     def _extract_url(self, instruction: str) -> str | None:
         """Extracts the first URL from an instruction using regex."""

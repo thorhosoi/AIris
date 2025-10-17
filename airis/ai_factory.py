@@ -62,12 +62,14 @@ class AIFactory:
             return CursorAgent()
         
         elif engine == "web_search":
-            from agents.web_search_agent import WebSearchAgent
-            return WebSearchAgent()
+            # web_search is not an LLM engine, it's an action
+            # If web_search is requested as LLM, use default engine instead
+            return AIFactory._create_gemini_client()
         
         elif engine == "web_browser":
-            from agents.web_browser_agent import WebBrowserAgent
-            return WebBrowserAgent()
+            # web_browser is not an LLM engine, it's an action
+            # If web_browser is requested as LLM, use default engine instead
+            return AIFactory._create_gemini_client()
         
         elif engine == "local":
             # Local operations don't need an AI client
