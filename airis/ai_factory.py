@@ -81,8 +81,31 @@ class AIFactory:
     @staticmethod
     def _create_gemini_client():
         """Create Gemini client."""
-        from agents.gemini_agent import GeminiAgent
-        return GeminiAgent()
+        import google.generativeai as genai
+        import os
+        from dotenv import load_dotenv
+        
+        load_dotenv()
+        
+        api_key = os.environ.get("GEMINI_API_KEY")
+        if not api_key:
+            raise ValueError(
+                "GEMINI_API_KEY not found. "
+                "Please set it in .env file or disable gemini in config.yaml"
+            )
+        
+        model_name = config.get("gemini.model_name", "gemini-2.5-pro")
+        max_tokens = config.get("gemini.max_tokens", 4000)
+        temperature = config.get("gemini.temperature", 0.1)
+        
+        genai.configure(api_key=api_key)
+        return genai.GenerativeModel(
+            model_name,
+            generation_config=genai.types.GenerationConfig(
+                max_output_tokens=max_tokens,
+                temperature=temperature,
+            )
+        )
     
     @staticmethod
     def _create_claude_client():
@@ -148,23 +171,31 @@ class UnifiedAIClient:
         Returns:
             Response object with .content attribute
         """
-        if self.engine in ["gemini", "cursor", "web_search", "web_browser"]:
-            # These return string directly
-            if hasattr(self.client, 'execute'):
-                result = self.client.execute(prompt)
-            else:
-                result = str(self.client)
-            
-            # Wrap in response object
-            class Response:
-                def __init__(self, content):
-                    self.content = content
-            
-            return Response(result)
+        # Wrap response in object with .content attribute
+        class Response:
+            def __init__(self, content):
+                self.content = content
+        
+        if self.engine == "gemini":
+            # Gemini returns GenerateContentResponse, extract text
+            try:
+                response = self.client.generate_content(prompt)
+                return Response(response.text)
+            except Exception as e:
+                return Response(f"Gemini API Error: {str(e)}")
         
         elif self.engine == "claude":
             # Claude returns AIMessage with .content
             return self.client.invoke(prompt)
+        
+        elif self.engine in ["cursor", "web_search", "web_browser"]:
+            # These should not be used as LLM engines
+            # Fall back to Gemini
+            try:
+                response = self.client.generate_content(prompt)
+                return Response(response.text)
+            except Exception as e:
+                return Response(f"API Error: {str(e)}")
         
         elif self.engine == "local":
             # Local operations don't use AI
