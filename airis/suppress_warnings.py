@@ -31,16 +31,41 @@ class StderrFilter:
                 "trace.cc",
                 "E0000 00:00:",  # Generic gRPC error prefix
             ]
+            self.buffer = ""
             StderrFilter._initialized = True
         
     def write(self, message):
-        # Filter out specific warning messages
-        if any(pattern in message for pattern in self.suppressed_patterns):
-            return  # Suppress these messages
-        self.original_stderr.write(message)
+        # Accumulate message in buffer
+        self.buffer += message
+        
+        # Check if we have complete lines
+        if '\n' in self.buffer:
+            lines = self.buffer.split('\n')
+            # Keep incomplete line in buffer
+            self.buffer = lines[-1]
+            
+            # Process complete lines
+            for line in lines[:-1]:
+                # Filter out specific warning messages
+                if not any(pattern in line for pattern in self.suppressed_patterns):
+                    self.original_stderr.write(line + '\n')
+                    self.original_stderr.flush()
         
     def flush(self):
+        # Flush any remaining buffered content
+        if self.buffer:
+            if not any(pattern in self.buffer for pattern in self.suppressed_patterns):
+                self.original_stderr.write(self.buffer)
+            self.buffer = ""
         self.original_stderr.flush()
+    
+    def isatty(self):
+        """Check if underlying stderr is a TTY."""
+        return self.original_stderr.isatty()
+    
+    def fileno(self):
+        """Return file descriptor."""
+        return self.original_stderr.fileno()
 
 
 def install_stderr_filter():

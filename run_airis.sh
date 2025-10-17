@@ -5,6 +5,9 @@
 export GRPC_VERBOSITY=ERROR
 export GRPC_TRACE=""
 
-# gRPC警告メッセージを除外してAirisを起動
-python3 -m airis.main 2>&1 | grep -v "WARNING: All log messages before absl::InitializeLog()" | grep -v "ALTS creds ignored" | grep -v "Unknown tracer" | grep -v "alts_credentials.cc" | grep -v "trace.cc" | grep -v "E0000 00:00"
+# STDERRを一時的にフィルタリング用のプロセス置換を使用
+exec 2> >(grep --line-buffered -v -e "WARNING: All log messages before absl::InitializeLog()" -e "ALTS creds ignored" -e "Unknown tracer" -e "alts_credentials.cc" -e "trace.cc" -e "E0000 00:00" >&2)
+
+# Airisを起動
+exec python3 -m airis.main
 
