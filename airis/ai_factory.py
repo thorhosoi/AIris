@@ -84,6 +84,13 @@ class AIFactory:
         import google.generativeai as genai
         import os
         from dotenv import load_dotenv
+        import logging
+        
+        # Suppress gRPC and absl warnings
+        os.environ['GRPC_VERBOSITY'] = 'ERROR'
+        os.environ['GRPC_TRACE'] = ''
+        logging.getLogger('absl').setLevel(logging.ERROR)
+        logging.getLogger('google').setLevel(logging.ERROR)
         
         load_dotenv()
         

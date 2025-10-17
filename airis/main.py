@@ -5,6 +5,15 @@ from airis.project_memory import project_memory_manager
 import os
 from airis.config import config
 
+# Suppress gRPC warnings
+os.environ['GRPC_VERBOSITY'] = 'ERROR'
+os.environ['GRPC_TRACE'] = ''
+os.environ['GRPC_ENABLE_FORK_SUPPORT'] = '1'
+
+# Suppress absl logging warnings
+import warnings
+warnings.filterwarnings('ignore', category=Warning)
+
 def create_project_structure(project_name: str):
     projects_root = config.get("projects_root_dir", "projects")
     project_path = os.path.join(projects_root, project_name)
