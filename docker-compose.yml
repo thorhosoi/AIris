@@ -11,6 +11,9 @@ services:
       - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
       - GEMINI_API_KEY=${GEMINI_API_KEY}
       - CURSOR_API_KEY=${CURSOR_API_KEY}
+      # Suppress gRPC/ALTS warnings
+      - GRPC_VERBOSITY=ERROR
+      - GRPC_TRACE=""
     volumes:
       # Mount the project directory
       - .:/app
