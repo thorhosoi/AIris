@@ -17,13 +17,16 @@ def print_welcome():
     print("  Airis - Interactive Mode")
     print("  対話型AIアシスタント")
     print("=" * 70)
+    print("\n💬 対話モード: 常に有効")
+    print("   - リクエストを入力すると自動的に要件確認が始まります")
+    print("   - 'quick <リクエスト>' で即座実行（要件確認なし）")
     print("\nコマンド:")
-    print("  'help' - ヘルプを表示")
-    print("  'interactive <リクエスト>' - 対話モードで要件を詰める")
-    print("  'quick <リクエスト>' - 即座に実行（従来モード）")
+    print("  リクエストを直接入力 - 対話モードで要件を詰める")
+    print("  'quick <リクエスト>' - 即座に実行（要件確認なし）")
     print("  'project create <名前>' - プロジェクトを作成")
     print("  'project use <名前>' - プロジェクトを切り替え")
     print("  'ai engine info' - AI設定を確認")
+    print("  'help' - ヘルプを表示")
     print("  'exit' / 'quit' - 終了")
     print("\n現在のプロジェクト:", config.get("current_project") or "未選択")
     print("=" * 70)
@@ -34,16 +37,22 @@ def print_help():
     print("\n" + "=" * 70)
     print("Airis ヘルプ")
     print("=" * 70)
-    print("\n【対話モード】")
-    print("  interactive <リクエスト>")
-    print("    例: interactive 計算プログラムを作って")
+    print("\n【対話モード（デフォルト）】")
+    print("  リクエストを直接入力")
+    print("    例: 計算プログラムを作って")
     print("    → Airisが要件を確認する質問をします")
     print("    → 質問に答えて要件を詰めていきます")
-    print("    → 要件確定後、'execute'で実装開始")
+    print("    → 要件確定後、自動的に実装開始")
+    print("\n  対話モードは永続的です：")
+    print("    - 一度開始すると、完了またはキャンセルまで継続")
+    print("    - 複数ターンの会話で要件を明確化")
+    print("    - 'execute' で実装開始")
+    print("    - 'cancel' で対話を中止")
     print("\n【クイック実行モード】")
     print("  quick <リクエスト>")
     print("    例: quick web search: Docker best practices")
     print("    → 即座に実行（要件確認なし）")
+    print("    → 単純なタスクや既知の操作に最適")
     print("\n【プロジェクト管理】")
     print("  project create <名前> - 新規プロジェクト作成")
     print("  project use <名前> - プロジェクト切り替え")
@@ -113,23 +122,26 @@ def run_interactive_cli():
                 print()
                 continue
             
-            # Interactive mode
+            # Check if user wants to start a new interactive session explicitly
+            # (This is now the default behavior, but kept for backwards compatibility)
             elif user_input.startswith("interactive ") or user_input.startswith("対話 "):
                 request = user_input.split(maxsplit=1)[1] if " " in user_input else ""
                 if not request:
                     print("エラー: リクエストを指定してください")
-                    print("例: interactive 計算プログラムを作って")
+                    print("例: 計算プログラムを作って（'interactive'は不要です）")
                     continue
                 
+                # Start interactive mode
                 print("\n" + "=" * 70)
-                print("対話モードを開始します...")
+                print("💬 要件確認を開始します...")
                 print("=" * 70 + "\n")
                 
                 response = interactive_orch.start_interactive_mode(request)
                 print(response)
                 print("\n" + "-" * 70)
-                print("質問に回答してください。")
-                print("コマンド: 'execute'=実行, 'cancel'=中止")
+                print("💡 質問に回答してください。")
+                print("   'execute' または '実行': 要件確定後に実装開始")
+                print("   'cancel' または 'キャンセル': 対話を中止")
                 print("-" * 70 + "\n")
                 continue
             
@@ -216,45 +228,21 @@ def run_interactive_cli():
                 print("\n" + result + "\n")
                 continue
             
-            # Default: suggest interactive or quick mode
+            # Default: automatically start interactive mode
             else:
-                print("\n実行モードを選択してください：")
-                print(f"  1. 対話モード: interactive {user_input}")
-                print(f"  2. クイック実行: quick {user_input}")
-                print("\nまたは、そのままEnterを押すと対話モードで開始します。")
+                # Start interactive mode automatically
+                print("\n" + "=" * 70)
+                print("💬 要件確認を開始します...")
+                print("=" * 70 + "\n")
                 
-                choice = input("選択 (1/2/Enter): ").strip()
-                
-                if choice == "1" or choice == "":
-                    # Start interactive mode
-                    print("\n" + "=" * 70)
-                    print("対話モードを開始します...")
-                    print("=" * 70 + "\n")
-                    
-                    response = interactive_orch.start_interactive_mode(user_input)
-                    print(response)
-                    print("\n" + "-" * 70)
-                    print("質問に回答してください。")
-                    print("コマンド: 'execute'=実行, 'cancel'=中止")
-                    print("-" * 70 + "\n")
-                
-                elif choice == "2":
-                    # Quick execution
-                    print("\n" + "=" * 70)
-                    print("クイック実行モード...")
-                    print("=" * 70 + "\n")
-                    
-                    result, code = orchestrator.delegate_task(user_input)
-                    print("--- RESULT ---")
-                    print(result)
-                    if code:
-                        print("\n--- GENERATED CODE ---")
-                        print(code[:500] + "..." if len(code) > 500 else code)
-                    print("\n" + "=" * 70 + "\n")
-                
-                else:
-                    print("キャンセルされました。")
-                
+                response = interactive_orch.start_interactive_mode(user_input)
+                print(response)
+                print("\n" + "-" * 70)
+                print("💡 質問に回答してください。")
+                print("   'execute' または '実行': 要件確定後に実装開始")
+                print("   'cancel' または 'キャンセル': 対話を中止")
+                print("   ヒント: 即座に実行したい場合は 'quick <リクエスト>' を使用")
+                print("-" * 70 + "\n")
                 continue
         
         except KeyboardInterrupt:
