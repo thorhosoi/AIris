@@ -4,15 +4,25 @@ from airis.orchestrator import Orchestrator
 from airis.project_memory import project_memory_manager
 import os
 from airis.config import config
+import logging
 
-# Suppress gRPC warnings
+# Suppress all logs below WARNING level
+logging.basicConfig(level=logging.WARNING)
+
+# Suppress gRPC and absl warnings (must be set before importing google modules)
 os.environ['GRPC_VERBOSITY'] = 'ERROR'
 os.environ['GRPC_TRACE'] = ''
 os.environ['GRPC_ENABLE_FORK_SUPPORT'] = '1'
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'  # Suppress TensorFlow warnings if used
 
-# Suppress absl logging warnings
+# Suppress Python warnings
 import warnings
 warnings.filterwarnings('ignore', category=Warning)
+
+# Suppress absl stderr logging before any google imports
+import absl.logging
+absl.logging.set_verbosity(absl.logging.ERROR)
+absl.logging.set_stderrthreshold(absl.logging.ERROR)
 
 def create_project_structure(project_name: str):
     projects_root = config.get("projects_root_dir", "projects")
