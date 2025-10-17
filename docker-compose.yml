@@ -28,3 +28,5 @@ services:
     # ANTHROPIC_API_KEY=sk-...
     env_file:
       - .env
+    # Use wrapper script to suppress gRPC warnings
+    command: bash -c "./run_airis.sh"

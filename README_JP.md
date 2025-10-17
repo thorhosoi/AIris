@@ -86,8 +86,14 @@ Airisは2つのモードで使用できます：
 対話型REPLを起動して、複数ターンの会話が可能：
 
 ```bash
+# 方法1: 直接起動（推奨、警告なし）
+docker-compose run --rm airis bash -c "./run_airis.sh"
+
+# 方法2: Python直接起動（gRPC警告が表示される場合あり）
 docker-compose run --rm airis python3 -m airis.main
 ```
+
+**注意**: 方法1を推奨します。gRPC/ALTS警告メッセージが表示されません。
 
 対話モードでは以下が可能です：
 - 要件を明確にするための会話
