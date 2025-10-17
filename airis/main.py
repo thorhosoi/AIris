@@ -1,43 +1,19 @@
 #!/usr/bin/env python3
 """
 Airis Main Entry Point
-
-Suppress gRPC/absl warnings before any imports.
 """
 
+# Import warning suppression FIRST (before any other airis modules)
 import sys
 import os
 
-# CRITICAL: Set environment variables BEFORE any imports
+# Setup warning suppression before any imports
 os.environ['GRPC_VERBOSITY'] = 'ERROR'
 os.environ['GRPC_TRACE'] = ''
 os.environ['GRPC_ENABLE_FORK_SUPPORT'] = '1'
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
-# Redirect stderr to filter out gRPC warnings
-class StderrFilter:
-    """Filter stderr to remove gRPC/ALTS warnings."""
-    def __init__(self, original_stderr):
-        self.original_stderr = original_stderr
-        self.buffer = ""
-        
-    def write(self, message):
-        # Filter out specific warning messages
-        if any(pattern in message for pattern in [
-            "WARNING: All log messages before absl::InitializeLog()",
-            "ALTS creds ignored",
-            "Unknown tracer",
-            "alts_credentials.cc",
-            "trace.cc"
-        ]):
-            return  # Suppress these messages
-        self.original_stderr.write(message)
-        
-    def flush(self):
-        self.original_stderr.flush()
-
-# Install stderr filter
-sys.stderr = StderrFilter(sys.stderr)
+# Import airis package (which will install stderr filter)
+import airis
 
 import typer
 from airis.orchestrator import Orchestrator
@@ -51,14 +27,6 @@ logging.basicConfig(level=logging.WARNING)
 
 # Suppress Python warnings
 warnings.filterwarnings('ignore', category=Warning)
-
-# Suppress absl logging
-try:
-    import absl.logging
-    absl.logging.set_verbosity(absl.logging.ERROR)
-    absl.logging.set_stderrthreshold(absl.logging.ERROR)
-except ImportError:
-    pass
 
 def create_project_structure(project_name: str):
     projects_root = config.get("projects_root_dir", "projects")
