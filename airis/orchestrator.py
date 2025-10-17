@@ -12,6 +12,7 @@ from airis.config import config
 from airis.ai_engine_manager import ai_engine_manager
 from airis.ai_engine_commands import ai_engine_commands
 from airis.system_context import get_system_context, get_capability_info
+from airis.project_memory import project_memory_manager
 import os
 import difflib
 

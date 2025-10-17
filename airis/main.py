@@ -1,6 +1,7 @@
 import typer
 import sys
 from airis.orchestrator import Orchestrator
+from airis.project_memory import project_memory_manager
 import os
 from airis.config import config
 
@@ -57,7 +58,20 @@ def main(prompt: str):
             return
         
         config.set("current_project", project_name)
+        
+        # Load project memory
+        projects_root = config.get("projects_root_dir", "projects")
+        memory = project_memory_manager.load_project_memory(project_name, projects_root)
+        
+        # Display project context
         typer.echo(f"Switched to project '{project_name}'.")
+        typer.echo("\n--- プロジェクト情報 ---")
+        typer.echo(memory.get_summary())
+        
+        if memory.memory.get("conversation_history"):
+            typer.echo("\n💡 ヒント: このプロジェクトには過去の作業履歴があります")
+            typer.echo("   '過去の作業を教えて' や '続きを行いたい' と入力してください")
+        
         return
 
     orchestrator = Orchestrator()

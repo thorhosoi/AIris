@@ -11,6 +11,7 @@ from airis.orchestrator import Orchestrator
 from airis.interactive_mode import InteractiveOrchestrator
 from airis.config import config
 from airis.system_context import get_capability_info
+from airis.project_memory import project_memory_manager
 
 # Import readline for command history (if available)
 try:
@@ -69,7 +70,12 @@ def print_help():
     print("\n【AI設定】")
     print("  ai engine info - AI設定を表示")
     print("  ai engine set default <engine> - デフォルトAIを変更")
+    print("\n【プロジェクト記憶】")
+    print("  過去の作業 / 履歴 / memory - プロジェクト記憶を表示")
+    print("  続き / 続きを行いたい - 過去の作業の続きを開始")
+    
     print("\n【その他】")
+    print("  about / 自己紹介 / 機能 / capabilities - Airisの機能を表示")
     print("  clear - 画面をクリア")
     print("  history - コマンド履歴")
     print("  exit / quit - 終了")
@@ -169,6 +175,33 @@ def run_interactive_cli():
                 print("詳細: 'help'コマンドでヘルプを表示\n")
                 continue
             
+            # Project memory commands
+            elif lower_input in ["過去の作業", "履歴", "続き", "過去の作業を教えて", "続きを行いたい", "project memory", "memory"]:
+                current_project = config.get("current_project")
+                if not current_project:
+                    print("\nエラー: プロジェクトが選択されていません")
+                    print("'project use <名前>' でプロジェクトを選択してください\n")
+                    continue
+                
+                if project_memory_manager.has_memory():
+                    memory = project_memory_manager.get_current_memory()
+                    print("\n" + "=" * 70)
+                    print(f"プロジェクト記憶: {current_project}")
+                    print("=" * 70)
+                    print(memory.get_project_context())
+                    print("=" * 70 + "\n")
+                else:
+                    # Load memory
+                    projects_root = config.get("projects_root_dir", "projects")
+                    memory = project_memory_manager.load_project_memory(current_project, projects_root)
+                    print("\n" + "=" * 70)
+                    print(f"プロジェクト記憶: {current_project}")
+                    print("=" * 70)
+                    print(memory.get_project_context())
+                    print("=" * 70 + "\n")
+                
+                continue
+            
             # Clear screen
             elif lower_input in ["clear", "cls"]:
                 print("\033[2J\033[H")  # ANSI escape code to clear screen
@@ -244,6 +277,14 @@ def run_interactive_cli():
                     project_name = parts[2]
                     result, _ = orchestrator.delegate_task(f"use project {project_name}")
                     print(result)
+                    
+                    # Load project memory
+                    projects_root = config.get("projects_root_dir", "projects")
+                    memory = project_memory_manager.load_project_memory(project_name, projects_root)
+                    
+                    if memory.memory.get("conversation_history"):
+                        print("\n💡 このプロジェクトには過去の作業履歴があります")
+                        print("   '過去の作業' コマンドで確認できます")
                 
                 elif subcommand in ["list", "一覧", "ls"]:
                     import os

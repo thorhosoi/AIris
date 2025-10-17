@@ -9,6 +9,7 @@ from typing import List, Dict, Optional
 from airis.llm import LLMClient
 from airis.config import config
 from airis.system_context import get_system_context, get_capability_info
+from airis.project_memory import project_memory_manager
 import json
 
 
@@ -64,10 +65,23 @@ class InteractiveSession:
         # Get system context
         system_context = get_system_context()
         
-        # Create clarification prompt
-        clarification_prompt = f"""{system_context}
+        # Get project context if available
+        project_context = ""
+        current_project = config.get("current_project")
+        if current_project and project_memory_manager.has_memory():
+            memory = project_memory_manager.get_current_memory()
+            project_context = f"""
+---
+
+【現在のプロジェクト情報】
+{memory.get_project_context()}
 
 ---
+"""
+        
+        # Create clarification prompt
+        clarification_prompt = f"""{system_context}
+{project_context}
 
 ユーザーから以下のリクエストを受けました：
 
@@ -76,6 +90,9 @@ class InteractiveSession:
 
 このリクエストを実行する前に、必要な要件を明確にする必要があります。
 あなたの能力を活かして、最適な実装を提供するために質問してください。
+
+重要：プロジェクト情報がある場合は、それを考慮して質問してください。
+例えば、既存のファイルとの整合性、過去の仕様との互換性などを確認してください。
 以下の手順で進めてください：
 
 1. リクエストを分析し、不明確な点や追加で確認すべき点をリストアップ
@@ -322,6 +339,21 @@ class InteractiveOrchestrator:
             if self.current_session.requirements_gathered:
                 final_prompt = self.current_session.get_final_prompt()
                 result, code = self.orchestrator.delegate_task(final_prompt)
+                
+                # Save to project memory
+                from airis.config import config
+                current_project = config.get("current_project")
+                if current_project and project_memory_manager.has_memory():
+                    memory = project_memory_manager.get_current_memory()
+                    memory.add_conversation(
+                        user_prompt=final_prompt,
+                        ai_response=result,
+                        task_type="interactive_session"
+                    )
+                    if self.current_session.final_specification:
+                        for req in self.current_session.final_specification.get("requirements", []):
+                            memory.add_note(f"要件: {req}")
+                
                 self.current_session = None
                 return True, "要件に基づいて実行しました。", result
             else:

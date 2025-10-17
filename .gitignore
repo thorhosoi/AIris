@@ -56,3 +56,6 @@ test_report_*.json
 
 # Interactive mode history
 .airis_history
+
+# Project memory (stored in each project directory)
+**/.airis_memory/
