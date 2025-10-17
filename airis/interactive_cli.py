@@ -6,10 +6,18 @@ Provides a REPL-style interface for multi-turn conversations with Airis.
 """
 
 import sys
+import os
 from airis.orchestrator import Orchestrator
 from airis.interactive_mode import InteractiveOrchestrator
 from airis.config import config
 from airis.system_context import get_capability_info
+
+# Import readline for command history (if available)
+try:
+    import readline
+    READLINE_AVAILABLE = True
+except ImportError:
+    READLINE_AVAILABLE = False
 
 
 def print_welcome():
@@ -68,9 +76,53 @@ def print_help():
     print("=" * 70 + "\n")
 
 
+def setup_readline():
+    """Setup readline for command history and completion."""
+    if not READLINE_AVAILABLE:
+        return
+    
+    # Set up history file
+    history_file = os.path.expanduser("~/.airis_history")
+    
+    # Create history file if it doesn't exist
+    if not os.path.exists(history_file):
+        open(history_file, 'w').close()
+    
+    # Load history
+    try:
+        readline.read_history_file(history_file)
+        # Set maximum history size
+        readline.set_history_length(1000)
+    except FileNotFoundError:
+        pass
+    
+    # Enable tab completion
+    readline.parse_and_bind("tab: complete")
+    
+    # Enable vi or emacs keybindings (depending on user preference)
+    # Default is emacs mode which supports up/down arrow keys
+    
+    return history_file
+
+
+def save_readline_history(history_file):
+    """Save readline history to file."""
+    if READLINE_AVAILABLE and history_file:
+        try:
+            readline.write_history_file(history_file)
+        except Exception as e:
+            pass  # Silently fail if history can't be saved
+
+
 def run_interactive_cli():
     """Run the interactive CLI."""
+    # Setup command history
+    history_file = setup_readline()
+    
     print_welcome()
+    
+    if READLINE_AVAILABLE:
+        print("💡 ヒント: 上下キーでコマンド履歴を操作できます\n")
     
     orchestrator = Orchestrator()
     interactive_orch = InteractiveOrchestrator(orchestrator)
@@ -103,6 +155,7 @@ def run_interactive_cli():
             # Exit commands
             if lower_input in ["exit", "quit", "終了"]:
                 print("\nAirisを終了します。ありがとうございました！")
+                save_readline_history(history_file)
                 break
             
             # Help command
@@ -258,11 +311,15 @@ def run_interactive_cli():
         
         except EOFError:
             print("\n\nAirisを終了します。")
+            save_readline_history(history_file)
             break
         
         except Exception as e:
             print(f"\nエラーが発生しました: {str(e)}\n")
             continue
+    
+    # Save history on normal exit
+    save_readline_history(history_file)
 
 
 if __name__ == "__main__":
