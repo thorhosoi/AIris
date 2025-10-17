@@ -1,31 +1,63 @@
-import typer
+#!/usr/bin/env python3
+"""
+Airis Main Entry Point
+
+Suppress gRPC/absl warnings before any imports.
+"""
+
 import sys
+import os
+
+# CRITICAL: Set environment variables BEFORE any imports
+os.environ['GRPC_VERBOSITY'] = 'ERROR'
+os.environ['GRPC_TRACE'] = ''
+os.environ['GRPC_ENABLE_FORK_SUPPORT'] = '1'
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
+
+# Redirect stderr to filter out gRPC warnings
+class StderrFilter:
+    """Filter stderr to remove gRPC/ALTS warnings."""
+    def __init__(self, original_stderr):
+        self.original_stderr = original_stderr
+        self.buffer = ""
+        
+    def write(self, message):
+        # Filter out specific warning messages
+        if any(pattern in message for pattern in [
+            "WARNING: All log messages before absl::InitializeLog()",
+            "ALTS creds ignored",
+            "Unknown tracer",
+            "alts_credentials.cc",
+            "trace.cc"
+        ]):
+            return  # Suppress these messages
+        self.original_stderr.write(message)
+        
+    def flush(self):
+        self.original_stderr.flush()
+
+# Install stderr filter
+sys.stderr = StderrFilter(sys.stderr)
+
+import typer
 from airis.orchestrator import Orchestrator
 from airis.project_memory import project_memory_manager
-import os
 from airis.config import config
 import logging
+import warnings
 
 # Suppress all logs below WARNING level
 logging.basicConfig(level=logging.WARNING)
 
-# Suppress gRPC and absl warnings (must be set before importing google modules)
-os.environ['GRPC_VERBOSITY'] = 'ERROR'
-os.environ['GRPC_TRACE'] = ''
-os.environ['GRPC_ENABLE_FORK_SUPPORT'] = '1'
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'  # Suppress TensorFlow warnings if used
-
 # Suppress Python warnings
-import warnings
 warnings.filterwarnings('ignore', category=Warning)
 
-# Suppress absl stderr logging before any google imports
+# Suppress absl logging
 try:
     import absl.logging
     absl.logging.set_verbosity(absl.logging.ERROR)
     absl.logging.set_stderrthreshold(absl.logging.ERROR)
 except ImportError:
-    # absl-py not installed, skip
     pass
 
 def create_project_structure(project_name: str):
