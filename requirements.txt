@@ -10,3 +10,4 @@ ddgs
 beautifulsoup4
 lxml
 google-generativeai
+absl-py

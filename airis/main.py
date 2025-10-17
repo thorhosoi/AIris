@@ -20,9 +20,13 @@ import warnings
 warnings.filterwarnings('ignore', category=Warning)
 
 # Suppress absl stderr logging before any google imports
-import absl.logging
-absl.logging.set_verbosity(absl.logging.ERROR)
-absl.logging.set_stderrthreshold(absl.logging.ERROR)
+try:
+    import absl.logging
+    absl.logging.set_verbosity(absl.logging.ERROR)
+    absl.logging.set_stderrthreshold(absl.logging.ERROR)
+except ImportError:
+    # absl-py not installed, skip
+    pass
 
 def create_project_structure(project_name: str):
     projects_root = config.get("projects_root_dir", "projects")
