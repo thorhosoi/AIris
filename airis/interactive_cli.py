@@ -9,6 +9,7 @@ import sys
 from airis.orchestrator import Orchestrator
 from airis.interactive_mode import InteractiveOrchestrator
 from airis.config import config
+from airis.system_context import get_capability_info
 
 
 def print_welcome():
@@ -107,6 +108,12 @@ def run_interactive_cli():
             # Help command
             elif lower_input in ["help", "h", "ヘルプ"]:
                 print_help()
+                continue
+            
+            # About/Capabilities command
+            elif lower_input in ["about", "info", "自己紹介", "機能", "capabilities"]:
+                print("\n" + get_capability_info())
+                print("詳細: 'help'コマンドでヘルプを表示\n")
                 continue
             
             # Clear screen

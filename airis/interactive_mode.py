@@ -8,6 +8,7 @@ have multi-turn conversations with AI to refine requirements before execution.
 from typing import List, Dict, Optional
 from airis.llm import LLMClient
 from airis.config import config
+from airis.system_context import get_system_context, get_capability_info
 import json
 
 
@@ -38,13 +39,43 @@ class InteractiveSession:
         self.conversation_history = []
         self.requirements_gathered = False
         
+        # Check if user is asking about Airis itself
+        prompt_lower = initial_prompt.lower()
+        if any(keyword in prompt_lower for keyword in ["airisとは", "airisについて", "あなたは", "あなたの機能", "何ができる", "できること"]):
+            # Return self-introduction
+            return f"""{get_system_context()}
+
+---
+
+私Airisについて質問いただき、ありがとうございます！
+
+{get_capability_info()}
+
+何かお手伝いできることはありますか？
+具体的なタスクをお聞かせいただければ、最適な方法で支援いたします。
+
+例:
+- 「Pythonでゲームを作って」
+- 「要件定義書を生成して」
+- 「このコードを分析して」
+- 「Dockerの最新情報を調べて」
+"""
+        
+        # Get system context
+        system_context = get_system_context()
+        
         # Create clarification prompt
-        clarification_prompt = f"""あなたは要件定義の専門家です。ユーザーから以下のリクエストを受けました：
+        clarification_prompt = f"""{system_context}
+
+---
+
+ユーザーから以下のリクエストを受けました：
 
 【ユーザーのリクエスト】
 {initial_prompt}
 
 このリクエストを実行する前に、必要な要件を明確にする必要があります。
+あなたの能力を活かして、最適な実装を提供するために質問してください。
 以下の手順で進めてください：
 
 1. リクエストを分析し、不明確な点や追加で確認すべき点をリストアップ
@@ -101,18 +132,25 @@ class InteractiveSession:
             "content": user_response
         })
         
+        # Get system context
+        system_context = get_system_context()
+        
         # Build conversation context
         conversation_context = self._build_conversation_context()
         
         # Create continuation prompt
-        continuation_prompt = f"""これまでの会話：
+        continuation_prompt = f"""{system_context}
+
+---
+
+これまでの会話：
 
 {conversation_context}
 
 【ユーザーの最新の回答】
 {user_response}
 
-これまでの会話を踏まえて、以下のいずれかを実行してください：
+これまでの会話を踏まえて、あなた（Airis）の能力を考慮し、以下のいずれかを実行してください：
 
 A) まだ不明確な点がある場合：
    追加の質問を投げかけてください。形式：

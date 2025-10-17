@@ -11,8 +11,9 @@ from airis.llm import llm_client
 from airis.config import config
 from airis.ai_engine_manager import ai_engine_manager
 from airis.ai_engine_commands import ai_engine_commands
+from airis.system_context import get_system_context, get_capability_info
 import os
-import difflib # NEW: Import difflib for diff generation
+import difflib
 
 class Orchestrator:
     def __init__(self):
@@ -41,6 +42,21 @@ class Orchestrator:
         Returns a tuple of (display_result_string, generated_code_string).
         If no code is generated (e.g., for shell agent), generated_code_string will be None.
         """
+        # Check if user is asking about Airis itself
+        prompt_lower = user_prompt.lower()
+        if any(keyword in prompt_lower for keyword in ["airisとは", "airisについて", "airisの機能", "あなたは誰", "何ができる", "できること"]):
+            system_context = get_system_context()
+            capability_info = get_capability_info()
+            return f"""{system_context}
+
+---
+
+{capability_info}
+
+何かお手伝いできることはありますか？
+具体的なタスクをお聞かせいただければ、最適な方法で支援いたします。
+""", None
+        
         # Check for document generation intent
         # Check for a full development cycle request
         if user_prompt.lower().startswith("develop:"):
