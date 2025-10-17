@@ -10,13 +10,17 @@
 ai_engines:
   # Default engine for all tasks (when no specific task routing is defined)
   # Options: claude, gemini, cursor, web_search, web_browser, local
-  default_engine: claude
+  default_engine: gemini  # Changed from claude due to API credit issues
   
   # Task-specific engine routing (overrides default_engine for specific tasks)
   task_routing:
     code_generation: cursor      # Use Cursor for code generation
-    document_generation: claude  # Use Claude for document creation
+    document_generation: gemini  # Use Gemini for document creation
     code_analysis: gemini        # Use Gemini for code analysis
+    orchestration: gemini        # Orchestrator (task routing)
+    interactive_mode: gemini     # Interactive mode (requirement gathering)
+    validation: gemini           # Output validation
+    project_memory: gemini       # Project memory analysis
     web_search: web_search       # Use web search for information retrieval
     web_browsing: web_browser    # Use web browser for URL content
     git_operations: local        # Use local git commands
@@ -38,7 +42,7 @@ ai_engines:
     free: local          # Use local for free operations
     low_cost: web_search # Use web search for low-cost operations
     medium_cost: gemini  # Use Gemini for medium-cost operations
-    high_cost: claude    # Use Claude for high-cost operations
+    high_cost: claude    # Use Claude for high-cost operations (if available)
 
 # Current active project (null = no active project)
 current_project: null
@@ -47,18 +51,25 @@ current_project: null
 # AI Engine Configuration Examples
 # =================================
 # 
-# Example 1: All tasks use Claude
-# default_engine: claude
-# task_routing: {}  # Empty means all tasks use default
+# Example 1: All tasks use Gemini (Recommended if Claude credits are low)
+# default_engine: gemini
+# task_routing:
+#   orchestration: gemini
+#   interactive_mode: gemini
+#   validation: gemini
 #
 # Example 2: Code generation only with Cursor
-# default_engine: claude
+# default_engine: gemini
 # task_routing:
 #   code_generation: cursor
+#   orchestration: gemini
+#   interactive_mode: gemini
+#   validation: gemini
 #
-# Example 3: All Gemini for cost efficiency
-# default_engine: gemini
-# task_routing: {}  # Empty means all tasks use default
+# Example 3: All Claude (if you have sufficient credits)
+# default_engine: claude
+# task_routing:
+#   code_generation: cursor  # Only code uses Cursor
 #
 # Example 4: Enterprise compliance mode
 # compliance_mode: true
@@ -67,7 +78,7 @@ current_project: null
 #
 # Example 5: Cost optimization enabled
 # cost_optimization: true
-# default_engine: claude
+# default_engine: gemini
 # (System will automatically choose cheaper engines for simple tasks)
 
 # Cursor Editor Configuration
@@ -84,19 +95,19 @@ cursor:
 gemini:
   max_tokens: 4000
   temperature: 0.1
+  model_name: gemini-2.5-pro
 
-# Main LLM Configuration (Anthropic Claude)
-# ==========================================
-llm:
+# Anthropic Claude Configuration
+# ===============================
+# Note: If you get credit balance errors, switch to Gemini in ai_engines section
+claude:
   max_tokens: 4000
-  model_name: claude-sonnet-4-5-20250929
-  provider: anthropic
   temperature: 0.1
+  model_name: claude-sonnet-4-5-20250929
 
 # Project Configuration
 # =====================
 projects_root_dir: projects
-# script_output_dir: generated_scripts  # Deprecated: Files are now saved to active project's src/ directory
 
 # Output Validation Settings
 # ===========================

@@ -14,6 +14,8 @@ ai_engines:
     low_cost: web_search
     medium_cost: gemini
   default_engine: gemini
+  
+  # Task routing: どのタスクでどのAIを使うか
   task_routing:
     code_analysis: gemini
     code_generation: cursor
@@ -22,6 +24,10 @@ ai_engines:
     shell_operations: local
     web_browsing: web_browser
     web_search: web_search
+    orchestration: gemini          # Orchestrator（タスク振り分け）
+    interactive_mode: gemini       # 対話モード（要件確認）
+    validation: gemini             # 出力検証
+    project_memory: gemini         # プロジェクト記憶の分析
 current_project: null
 cursor:
   api_url: http://localhost:5000
@@ -30,14 +36,19 @@ cursor:
   path: cursor
   temperature: 0.1
 enable_output_validation: true
+
+# Gemini設定
 gemini:
   max_tokens: 4000
   temperature: 0.1
-llm:
-  max_tokens: 4000
   model_name: gemini-2.5-pro
-  provider: gemini
+
+# Claude設定（クレジット不足の場合は使用しない）
+claude:
+  max_tokens: 4000
   temperature: 0.1
+  model_name: claude-sonnet-4-5-20250929
+
 projects_root_dir: projects
 validation_tasks:
 - code_generation

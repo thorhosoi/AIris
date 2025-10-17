@@ -9,7 +9,8 @@ class DocumentCompletionAgent(BaseAgent):
     """
     
     def __init__(self):
-        self.llm_client = LLMClient()
+        # Use AI engine specified in config for document generation
+        self.llm_client = LLMClient("document_generation")
     
     def _check_document_completeness(self, content: str, doc_type: str) -> tuple[bool, str]:
         """

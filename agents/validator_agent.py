@@ -21,7 +21,8 @@ class ValidatorAgent(BaseAgent):
     
     def __init__(self):
         super().__init__()
-        self.llm_client = LLMClient()
+        # Use AI engine specified in config for validation
+        self.llm_client = LLMClient("validation")
     
     def execute(self, instruction: str) -> str:
         """

@@ -6,7 +6,6 @@ have multi-turn conversations with AI to refine requirements before execution.
 """
 
 from typing import List, Dict, Optional
-from airis.llm import LLMClient
 from airis.config import config
 from airis.system_context import get_system_context, get_capability_info
 from airis.project_memory import project_memory_manager
@@ -22,7 +21,9 @@ class InteractiveSession:
     """
     
     def __init__(self):
-        self.llm_client = LLMClient()
+        # Use AI engine specified in config for interactive mode
+        from airis.llm import LLMClient
+        self.llm_client = LLMClient("interactive_mode")
         self.conversation_history: List[Dict[str, str]] = []
         self.requirements_gathered = False
         self.final_specification = None
