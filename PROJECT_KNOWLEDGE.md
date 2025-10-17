@@ -1,6 +1,6 @@
 # Project Airis Knowledge Base
 
-This document summarizes the current state and understanding of the "Airis" project as of 2025-10-13 (v2.2.0). It serves as a comprehensive knowledge repository for maintaining context and tracking project evolution.
+This document summarizes the current state and understanding of the "Airis" project as of 2025-10-13 (v2.3.0). It serves as a comprehensive knowledge repository for maintaining context and tracking project evolution.
 
 **Note:** This is a living document that will be continuously updated as new information about the project becomes available or as its state changes. It also records important environmental and procedural notes to avoid repeating troubleshooting steps.
 
@@ -335,7 +335,21 @@ AIris/
 └── .gitignore             # Git除外設定
 ```
 
-### Key Improvements Made (v2.2.0)
+### Key Improvements Made (v2.3.0)
+- **Interactive Mode**: Multi-turn conversation for requirement gathering
+  - REPL-style interface for natural dialogue
+  - Clarification questions before execution
+  - Better accuracy through clearer requirements
+- **Output Validation**: AI-powered double-checking system
+  - ValidatorAgent for quality assurance
+  - 4-aspect validation (accuracy, completeness, quality, errors)
+  - Automatic validation results display
+- **Enhanced Documentation**: Processing flow and system architecture
+  - Detailed processing flow documentation
+  - Validation system documentation
+  - Interactive mode user guide
+
+### Previous Improvements (v2.2.0)
 - **Gemini API Fix**: Updated model name to `gemini-2.5-pro` to resolve 404 errors
 - **Package Updates**: Migrated from `duckduckgo_search` to `ddgs` package
 - **Dynamic Configuration**: Implemented automatic config reload without container restart

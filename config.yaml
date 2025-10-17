@@ -22,13 +22,14 @@ ai_engines:
     shell_operations: local
     web_browsing: web_browser
     web_search: web_search
-current_project: test_project
+current_project: null
 cursor:
   api_url: http://localhost:5000
   code_generation: true
   max_tokens: 4000
   path: cursor
   temperature: 0.1
+enable_output_validation: true
 gemini:
   max_tokens: 4000
   temperature: 0.1
@@ -38,3 +39,7 @@ llm:
   provider: anthropic
   temperature: 0.1
 projects_root_dir: projects
+validation_tasks:
+- code_generation
+- document_generation
+- code_analysis

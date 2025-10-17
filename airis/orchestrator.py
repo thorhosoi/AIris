@@ -1,11 +1,12 @@
 from agents.code_agent import CodeAgent
 from agents.shell_agent import ShellAgent
-from agents.cursor_agent import CursorAgent # NEW: Import CursorAgent
+from agents.cursor_agent import CursorAgent
 from agents.web_search_agent import WebSearchAgent
 from agents.web_browser_agent import WebBrowserAgent
-from agents.document_completion_agent import DocumentCompletionAgent # NEW
-from agents.git_agent import GitAgent # NEW
-from agents.gemini_agent import GeminiAgent # NEW
+from agents.document_completion_agent import DocumentCompletionAgent
+from agents.git_agent import GitAgent
+from agents.gemini_agent import GeminiAgent
+from agents.validator_agent import ValidatorAgent
 from airis.llm import llm_client
 from airis.config import config
 from airis.ai_engine_manager import ai_engine_manager
@@ -18,13 +19,21 @@ class Orchestrator:
         self.agents = {
             "code": CodeAgent(),
             "shell": ShellAgent(),
-            "cursor": CursorAgent(), # NEW: Add CursorAgent
+            "cursor": CursorAgent(),
             "web_search": WebSearchAgent(),
             "web_browser": WebBrowserAgent(),
-            "doc_completion": DocumentCompletionAgent(), # NEW
-            "git": GitAgent(), # NEW
-            "gemini": GeminiAgent(), # NEW
+            "doc_completion": DocumentCompletionAgent(),
+            "git": GitAgent(),
+            "gemini": GeminiAgent(),
+            "validator": ValidatorAgent(),
         }
+        # Validation settings
+        self.enable_validation = config.get("enable_output_validation", True)
+        self.validation_tasks = config.get("validation_tasks", [
+            "code_generation", 
+            "document_generation", 
+            "code_analysis"
+        ])
 
     def delegate_task(self, user_prompt: str) -> tuple[str, str | None]:
         """
@@ -163,13 +172,30 @@ Filename:"""
             else:
                 display_result = f"{execution_result}\nSuggested filename: {suggested_filename}"
             
+            # Validate code if enabled
+            if self.enable_validation and task_type in self.validation_tasks:
+                is_valid, validated_output, validation_msg = self._validate_output(
+                    task_type, user_prompt, execution_result
+                )
+                display_result = f"{display_result}\n\n{validation_msg}"
+            
             return display_result, generated_code
         elif agent_name in ["web_search", "web_browser", "doc_completion", "git", "gemini", "cursor"]:
-            # For web agents, doc completion agent, git agent, gemini agent, and cursor agent, no code is generated for saving
-            return agent.execute(user_prompt), None
+            # Execute agent
+            result = agent.execute(user_prompt)
+            
+            # Validate output if enabled
+            if self.enable_validation and task_type in self.validation_tasks:
+                is_valid, validated_result, validation_msg = self._validate_output(
+                    task_type, user_prompt, result
+                )
+                result = f"{result}\n\n--- VALIDATION ---\n{validation_msg}"
+            
+            return result, None
         else:
             # For shell agent, no code is generated for saving
-            return agent.execute(user_prompt), None
+            result = agent.execute(user_prompt)
+            return result, None
 
     def _handle_development_cycle(self, task_description: str) -> tuple[str, str | None]:
         current_project = config.get("current_project")
@@ -390,6 +416,53 @@ Task: {task_description}
             return "shell_operations"
         else:
             return "code_generation"  # Default task type
+    
+    def _validate_output(self, task_type: str, original_prompt: str, output: str) -> tuple[bool, str, str]:
+        """
+        Validate the output using ValidatorAgent.
+        
+        Args:
+            task_type: Type of task
+            original_prompt: Original user prompt
+            output: Output to validate
+            
+        Returns:
+            Tuple of (is_valid, validated_output, validation_message)
+        """
+        if not self.enable_validation:
+            return True, output, "Validation disabled"
+        
+        if task_type not in self.validation_tasks:
+            return True, output, "Validation not required for this task type"
+        
+        # Skip validation for very short outputs
+        if len(output) < 50:
+            return True, output, "Output too short to validate"
+        
+        validator = self.agents["validator"]
+        instruction = f"validate: {task_type} | {original_prompt} | {output}"
+        
+        try:
+            validation_result = validator.execute(instruction)
+            
+            if validation_result.startswith("VALIDATION_OK"):
+                return True, output, "✓ 検証完了: 品質基準を満たしています"
+            
+            elif validation_result.startswith("VALIDATION_NG"):
+                parts = validation_result.split("|", 1)
+                message = parts[1] if len(parts) > 1 else "重大な問題が検出されました"
+                return False, output, f"✗ 検証失敗:\n{message}"
+            
+            elif validation_result.startswith("VALIDATION_NEEDS_IMPROVEMENT"):
+                parts = validation_result.split("|", 1)
+                message = parts[1] if len(parts) > 1 else "改善の余地があります"
+                return True, output, f"⚠ 改善推奨:\n{message}"
+            
+            else:
+                return True, output, "⚠ 検証でエラーが発生しましたが、出力は返却されます"
+                
+        except Exception as e:
+            return True, output, f"⚠ 検証エラー: {str(e)}"
     
     def _map_engine_to_agent(self, engine: str, user_prompt: str) -> str:
         """Map AI engine to agent name."""

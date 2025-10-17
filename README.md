@@ -76,7 +76,24 @@ docker-compose up -d
 
 ### 4. Start a Session
 
-Connect to the running container to start your interactive session with Airis.
+You can use Airis in two modes:
+
+#### Option A: Interactive Mode (Recommended for complex tasks)
+
+Start an interactive REPL where you can have multi-turn conversations:
+
+```bash
+docker-compose run --rm airis python3 -m airis.main
+```
+
+This launches an interactive session where you can:
+- Have conversations to clarify requirements
+- Refine specifications through dialogue
+- Get better results with clearer requirements
+
+#### Option B: Quick Mode (For simple, one-off tasks)
+
+Connect to the running container for one-time commands:
 
 ```bash
 docker-compose exec airis python -m airis.main

@@ -97,3 +97,20 @@ llm:
 # =====================
 projects_root_dir: projects
 # script_output_dir: generated_scripts  # Deprecated: Files are now saved to active project's src/ directory
+
+# Output Validation Settings
+# ===========================
+# Enable/disable AI-powered output validation (double-checking by another AI)
+enable_output_validation: true
+
+# Task types that require validation
+validation_tasks:
+  - code_generation     # Validate generated code
+  - document_generation # Validate generated documents
+  - code_analysis       # Validate code analysis results
+  
+# Benefits of validation:
+# - Improved accuracy and quality
+# - Automatic error detection
+# - Reduced user burden for quality checks
+# Note: Adds slight latency due to additional AI call

@@ -1,4 +1,5 @@
 import typer
+import sys
 from airis.orchestrator import Orchestrator
 import os
 from airis.config import config
@@ -89,5 +90,17 @@ def main(prompt: str):
         else:
             print("Denied. Code will not be saved.")
 
+def interactive():
+    """
+    Start Airis in interactive mode (REPL).
+    """
+    from airis.interactive_cli import run_interactive_cli
+    run_interactive_cli()
+
+
 if __name__ == "__main__":
-    typer.run(main)
+    # Check if interactive mode is requested
+    if len(sys.argv) == 1 or (len(sys.argv) == 2 and sys.argv[1] in ["--interactive", "-i", "interactive"]):
+        interactive()
+    else:
+        typer.run(main)
